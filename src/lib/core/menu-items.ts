@@ -58,7 +58,7 @@ export function isPremiumMenuItem(item: MenuItem) {
   return plan?.toLowerCase() === "premium";
 }
 
-export async function getFeaturedMenuItems(signal?: AbortSignal) {
+export async function getMenuItems(signal?: AbortSignal) {
   const response = await fetch(menuItemsUrl(), {
     method: "GET",
     signal,
@@ -76,8 +76,11 @@ export async function getFeaturedMenuItems(signal?: AbortSignal) {
         Number(isPremiumMenuItem(second)) - Number(isPremiumMenuItem(first));
       if (premiumDifference !== 0) return premiumDifference;
       return (second.rating ?? 0) - (first.rating ?? 0);
-    })
-    .slice(0, 6);
+    });
+}
+
+export async function getFeaturedMenuItems(signal?: AbortSignal) {
+  return (await getMenuItems(signal)).slice(0, 6);
 }
 
 export async function addMenuItems(pizzaData: MenuItem[]) {
@@ -91,6 +94,16 @@ export async function addMenuItems(pizzaData: MenuItem[]) {
 
   if (!response.ok) {
     throw new Error(`Could not add menu items (${response.status}).`);
+  }
+
+  return response.json();
+}
+
+export async function getMenuItemDetails(id: string) {
+  const response = await fetch(`${BASE_URL}/menu-items/${id}`);
+
+  if (!response.ok) {
+    throw new Error("Could not load menu item details.");
   }
 
   return response.json();

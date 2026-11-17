@@ -13,6 +13,7 @@ export type MenuItem = {
   isAvailable?: boolean;
   isActive?: boolean;
   location?: string;
+  vendorId?: string;
   vendorName?: string;
   vendorPlan?: string;
   vendorSubscriptionPlan?: string;

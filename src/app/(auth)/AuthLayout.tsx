@@ -12,8 +12,8 @@ const heroImage =
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <main className="min-h-screen bg-[#070809] px-3 py-3 text-white sm:px-5 sm:py-5">
-      <div className="mx-auto flex min-h-[calc(100svh-1.5rem)] max-w-[1440px] flex-col overflow-hidden rounded-xl border border-white/15 bg-[#090a0b] shadow-[0_24px_100px_rgba(0,0,0,0.55)] sm:min-h-[calc(100svh-2.5rem)]">
+    <main className="flex flex-1 bg-[#070809] px-3 py-3 text-white sm:px-5 sm:py-5">
+      <div className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col overflow-hidden rounded-xl border border-white/15 bg-[#090a0b] shadow-[0_24px_100px_rgba(0,0,0,0.55)]">
         <div className="grid flex-1 md:grid-cols-[1.02fr_0.98fr]">
           <section className="relative flex min-h-[380px] flex-col justify-between overflow-hidden px-6 py-6 sm:px-9 sm:py-8 md:min-h-0 lg:px-10">
             <Image
@@ -74,12 +74,6 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           </section>
         </div>
 
-        <footer className="flex flex-col justify-between gap-2 border-t border-white/10 px-6 py-3 text-[11px] text-white/45 sm:flex-row sm:px-8">
-          <p>© {new Date().getFullYear()} PizzaHub. All rights reserved.</p>
-          <p>
-            Made with <span className="text-red-500">♥</span> for pizza lovers.
-          </p>
-        </footer>
       </div>
     </main>
   );

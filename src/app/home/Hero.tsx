@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import Navbar from "./Navbar";
 
 const pizzas = [
   {
@@ -50,17 +49,13 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative isolate min-h-screen overflow-hidden bg-[#08090b] text-white">
+    <section className="relative isolate min-h-[calc(100svh-4rem)] overflow-hidden bg-[#08090b] text-white">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_78%_46%,rgba(54,63,77,0.44),transparent_43%),linear-gradient(110deg,#050505_0%,#08090c_56%,#11151c_100%)]"
       />
 
-      <div className="relative z-30 mx-auto w-full max-w-375 px-5 pt-4 sm:px-8 lg:px-12">
-        <Navbar />
-      </div>
-
-      <main className="relative mx-auto flex min-h-[calc(100svh-76px)] max-w-375 flex-col px-5 pb-6 pt-10 sm:px-8 md:pb-32 md:pt-0 lg:px-12">
+      <main className="relative mx-auto flex min-h-[calc(100svh-8rem)] max-w-375 flex-col px-5 pb-6 pt-10 sm:px-8 md:pb-32 md:pt-0 lg:px-12">
         <div className="relative z-10 mt-6 max-w-135 md:mt-12">
           <h1
             className="max-w-130 text-[clamp(3rem,4.2vw,4rem)] leading-[0.98] tracking-[0.005em]"

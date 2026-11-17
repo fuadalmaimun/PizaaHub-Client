@@ -1,101 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, MapPin, Pizza, RefreshCw, Star } from "lucide-react";
+import { ArrowRight, RefreshCw } from "lucide-react";
 
-import {
-  getFeaturedMenuItems,
-  isPremiumMenuItem,
-} from "@/lib/core/menu-items";
+import FeaturedCard from "@/app/home/FeaturedCard";
+import { getFeaturedMenuItems } from "@/lib/core/menu-items";
 import type { MenuItem } from "@/lib/types/menu";
 
 function itemName(item: MenuItem) {
   return item.itemName ?? item.name ?? "Featured pizza";
-}
-
-function itemImage(item: MenuItem) {
-  return item.images?.[0] ?? item.image;
-}
-
-function vendorName(item: MenuItem) {
-  return item.vendor?.businessName ?? item.vendor?.name ?? item.vendorName;
-}
-
-function FeaturedCard({ item }: { item: MenuItem }) {
-  const image = itemImage(item);
-  const id = item._id ?? item.id;
-
-  return (
-    <article className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] transition hover:-translate-y-1 hover:border-emerald-500/40 hover:bg-white/[0.055]">
-      <div className="relative aspect-[4/3] overflow-hidden bg-white/5">
-        {image ? (
-          <Image
-            src={image}
-            alt={itemName(item)}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            unoptimized
-            className="object-cover transition duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <div className="grid h-full place-items-center text-emerald-400/70">
-            <Pizza aria-hidden="true" size={42} />
-          </div>
-        )}
-        {isPremiumMenuItem(item) && (
-          <span className="absolute left-3 top-3 rounded-full border border-emerald-400/30 bg-black/70 px-3 py-1 text-[11px] font-semibold text-emerald-300 backdrop-blur">
-            Featured
-          </span>
-        )}
-      </div>
-
-      <div className="p-4 sm:p-5">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-xs font-medium uppercase tracking-wide text-emerald-400">
-              {item.category}
-            </p>
-            <h3 className="mt-1 truncate text-lg font-semibold text-white">
-              {itemName(item)}
-            </h3>
-          </div>
-          {typeof item.rating === "number" && (
-            <span className="inline-flex shrink-0 items-center gap-1 text-sm text-amber-300">
-              <Star aria-hidden="true" className="fill-current" size={14} />
-              {item.rating.toFixed(1)}
-            </span>
-          )}
-        </div>
-
-        <p className="mt-2 line-clamp-2 min-h-10 text-sm leading-5 text-white/55">
-          {item.description}
-        </p>
-
-        <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
-          <div>
-            <p className="text-lg font-bold text-white">
-              ৳{item.price.toLocaleString("en-BD")}
-            </p>
-            {(item.location || vendorName(item)) && (
-              <p className="mt-1 flex items-center gap-1 truncate text-xs text-white/45">
-                {item.location && <MapPin aria-hidden="true" size={12} />}
-                {item.location ?? vendorName(item)}
-              </p>
-            )}
-          </div>
-          <Link
-            href={id ? `/menu/${encodeURIComponent(id)}` : "/menu"}
-            className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-emerald-400 transition hover:text-emerald-300"
-          >
-            View Details
-            <ArrowRight aria-hidden="true" size={15} />
-          </Link>
-        </div>
-      </div>
-    </article>
-  );
 }
 
 export default function FeaturedItems() {
@@ -191,7 +105,10 @@ export default function FeaturedItems() {
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((item, index) => (
-              <FeaturedCard key={item._id ?? item.id ?? `${itemName(item)}-${index}`} item={item} />
+              <FeaturedCard
+                key={item._id ?? item.id ?? `${itemName(item)}-${index}`}
+                item={item}
+              />
             ))}
           </div>
         )}
