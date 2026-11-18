@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Image from "next/image";
 import { ImagePlus, LoaderCircle, X } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 
 import type { VendorMenuItemInput } from "@/lib/core/server";
 import type { MenuItem } from "@/lib/types/menu";
@@ -25,6 +25,17 @@ const EMPTY_FORM: MenuForm = {
   location: "",
   images: [],
 };
+
+const PIZZA_CATEGORIES = [
+  "Classic Pizza",
+  "Chicken Pizza",
+  "Beef Pizza",
+  "Cheese Pizza",
+  "Seafood Pizza",
+  "Vegetarian Pizza",
+  "Spicy Pizza",
+  "Special Pizza",
+] as const;
 
 function formFromItem(item?: MenuItem): MenuForm {
   if (!item) return { ...EMPTY_FORM };
@@ -144,6 +155,7 @@ export default function VendorMenuItemForm({
           <input
             required
             value={form.itemName}
+            placeholder="e.g. Classic Pepperoni"
             onChange={(event) =>
               setForm((current) => ({
                 ...current,
@@ -155,7 +167,7 @@ export default function VendorMenuItemForm({
         </label>
         <label className="text-sm text-white/70">
           Category
-          <input
+          <select
             required
             value={form.category}
             onChange={(event) =>
@@ -165,7 +177,24 @@ export default function VendorMenuItemForm({
               }))
             }
             className="mt-2 h-11 w-full rounded-lg border border-white/10 bg-[#090a0b] px-3 text-white outline-none focus:border-emerald-500"
-          />
+          >
+            <option value="" disabled>
+              Select a pizza category
+            </option>
+            {form.category &&
+              !PIZZA_CATEGORIES.some(
+                (category) => category === form.category,
+              ) && (
+                <option value={form.category}>
+                  {form.category} (current category)
+                </option>
+              )}
+            {PIZZA_CATEGORIES.map((category) => (
+              <option key={category} value={category} className="bg-[#090a0b]">
+                {category}
+              </option>
+            ))}
+          </select>
         </label>
         <label className="text-sm text-white/70">
           Price
@@ -175,6 +204,7 @@ export default function VendorMenuItemForm({
             min="0.01"
             step="0.01"
             value={form.price}
+            placeholder="e.g. 499"
             onChange={(event) =>
               setForm((current) => ({
                 ...current,
@@ -189,6 +219,7 @@ export default function VendorMenuItemForm({
           <input
             required
             value={form.location}
+            placeholder="e.g. Dhanmondi, Dhaka"
             onChange={(event) =>
               setForm((current) => ({
                 ...current,
@@ -204,6 +235,7 @@ export default function VendorMenuItemForm({
             required
             rows={3}
             value={form.description}
+            placeholder="Describe the ingredients and what makes this pizza special."
             onChange={(event) =>
               setForm((current) => ({
                 ...current,

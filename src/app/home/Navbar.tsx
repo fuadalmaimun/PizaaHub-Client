@@ -15,7 +15,7 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/sonner";
 
 import { authClient } from "@/lib/auth-client";
 import { dashboardPath, profileSettingsPath } from "@/lib/dashboard";
