@@ -186,6 +186,17 @@ html.light [data-light-theme="hero-gradient"] {
     linear-gradient(110deg, #fffaf2 0%, #fff7eb 56%, #f5e9d9 100%) !important;
 }
 
+html.light [data-light-theme="hero-image"] {
+  mix-blend-mode: normal !important;
+  opacity: 1 !important;
+}
+
+html.light [data-light-theme="hero-label"] {
+  background-color: rgb(255 250 242 / 88%) !important;
+  border-color: rgb(76 55 38 / 16%) !important;
+  box-shadow: 0 12px 32px rgb(76 55 38 / 12%);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

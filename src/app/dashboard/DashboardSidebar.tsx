@@ -106,6 +106,7 @@ function getSidebarItems(role: DashboardRole): SidebarItem[] {
       href: "/dashboard/admin/menu-items",
       icon: Pizza,
     },
+    profile,
   ];
 }
 

@@ -47,6 +47,12 @@ export const auth = betterAuth({
         defaultValue: false,
         input: false,
       },
+      // Vendor-only field. Optional because customers/admins do not have one.
+      businessName: {
+        type: "string",
+        required: false,
+        input: true,
+      },
       subscriptionPlan: {
         type: "string",
         required: true,

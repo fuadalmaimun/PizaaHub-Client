@@ -160,14 +160,14 @@ export default function Footer() {
               </div>
 
               <a
-                href="mailto:support@pizzahub.com"
+                href="mailto:fuadmaymun0@gmail.com"
                 className="flex items-center gap-3 text-sm text-white/50 transition-colors hover:text-emerald-400"
               >
                 <Mail
                   size={19}
                   className="shrink-0 text-emerald-400"
                 />
-                support@pizzahub.com
+                fuadmaymun0@gmail.com
               </a>
 
               <a
@@ -178,7 +178,7 @@ export default function Footer() {
                   size={19}
                   className="shrink-0 text-emerald-400"
                 />
-                +880 1234-567890
+                +880 1300-725948
               </a>
 
               <div className="flex items-center gap-3 text-sm text-white/50">

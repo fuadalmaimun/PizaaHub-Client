@@ -259,6 +259,41 @@ export async function getVendorOverview(token: string, signal?: AbortSignal) {
   return request("/vendor/overview", token, { signal });
 }
 
+export type VendorSubscription = {
+  subscriptionPlan: "free" | "premium";
+};
+
+/**
+ * Current vendor plan. Premium is only ever set by the verified Stripe
+ * webhook on the backend, never by this page.
+ */
+export async function getVendorSubscription(
+  token: string,
+  signal?: AbortSignal,
+): Promise<VendorSubscription> {
+  const payload = await request("/vendor/subscription", token, { signal });
+  if (isRecord(payload) && typeof payload.subscriptionPlan === "string") {
+    return {
+      subscriptionPlan:
+        payload.subscriptionPlan === "premium" ? "premium" : "free",
+    };
+  }
+  throw new Error("The backend returned an invalid subscription response.");
+}
+
+/** Returns the Stripe Checkout URL to redirect the vendor to. */
+export async function createVendorCheckoutSession(
+  token: string,
+): Promise<string> {
+  const payload = await request("/vendor/create-checkout-session", token, {
+    method: "POST",
+  });
+  if (isRecord(payload) && typeof payload.url === "string" && payload.url) {
+    return payload.url;
+  }
+  throw new Error("Stripe did not return a checkout URL.");
+}
+
 export async function getVendorMenuItems(
   token: string,
   signal?: AbortSignal,

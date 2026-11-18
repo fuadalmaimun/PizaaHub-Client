@@ -52,7 +52,10 @@ export default function Hero() {
   return (
     <section className="relative isolate min-h-[calc(100svh-4rem)] overflow-hidden bg-[#08090b] text-white">
       {/* Background Effects */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_75%_45%,rgba(5,150,105,0.18),transparent_45%),linear-gradient(110deg,#050505_0%,#08090c_55%,#11151c_100%)]" />
+      <div
+        data-light-theme="hero-gradient"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_75%_45%,rgba(5,150,105,0.18),transparent_45%),linear-gradient(110deg,#050505_0%,#08090c_55%,#11151c_100%)]"
+      />
 
       <div className="pointer-events-none absolute -right-40 top-10 size-120 rounded-full bg-emerald-500/10 blur-[120px]" />
 
@@ -127,6 +130,7 @@ export default function Hero() {
           <Image
             src={pizzas[activePizza].image}
             alt={pizzas[activePizza].name}
+            data-light-theme="hero-image"
             fill
             sizes="(max-width: 768px) 100vw, 65vw"
             unoptimized
@@ -135,7 +139,10 @@ export default function Hero() {
           />
 
           {/* Floating Pizza Label */}
-          <div className="absolute bottom-8 right-3 z-20 rounded-2xl border border-white/10 bg-black/50 px-5 py-3 shadow-xl backdrop-blur-xl sm:right-8">
+          <div
+            data-light-theme="hero-label"
+            className="absolute bottom-8 right-3 z-20 rounded-2xl border border-white/10 bg-black/50 px-5 py-3 shadow-xl backdrop-blur-xl sm:right-8"
+          >
             <p className="text-[10px] font-semibold tracking-widest text-emerald-400">
               FEATURED PIZZA
             </p>
