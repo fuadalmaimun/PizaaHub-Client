@@ -657,6 +657,17 @@ function isAdminTransaction(value: unknown): value is AdminTransaction {
   );
 }
 
+function toTransactionVendor(user?: AdminUser): AdminTransactionVendor | null {
+  if (!user) return null;
+  return {
+    _id: user._id ?? user.id,
+    name: user.name,
+    email: user.email,
+    businessName: user.businessName,
+    image: user.image,
+  };
+}
+
 /** Every Premium payment on the platform, newest first (admin only). */
 export async function getAdminTransactions(
   token: string,
@@ -667,5 +678,24 @@ export async function getAdminTransactions(
   if (!list.every(isAdminTransaction)) {
     throw new Error("The backend returned an invalid transactions response.");
   }
+
+  // Some API builds send only the vendor id. In that case we look the vendor
+  // details up ourselves so the table never shows "Unknown vendor".
+  if (list.some((transaction) => !transaction.vendor)) {
+    const vendors = await getAdminUsers(token, { role: "vendor" }, signal);
+    const vendorsById = new Map(
+      vendors.map((vendor) => [vendor._id ?? vendor.id, vendor]),
+    );
+
+    return list.map((transaction) => ({
+      ...transaction,
+      vendor:
+        transaction.vendor ??
+        (transaction.vendorId
+          ? toTransactionVendor(vendorsById.get(transaction.vendorId))
+          : null),
+    }));
+  }
+
   return list;
 }
