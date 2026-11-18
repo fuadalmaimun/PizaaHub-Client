@@ -114,6 +114,20 @@ function ProfileForm({
   const isPremium =
     role === "vendor" && user.subscriptionPlan === "premium";
 
+  /**
+   * The photo lives on ImgBB. We save its URL on the user right away, so a
+   * page reload always shows the same picture.
+   */
+  async function saveImageUrl(nextUrl: string) {
+    const { error } = await authClient.updateUser({
+      image: nextUrl ? nextUrl : null,
+    });
+
+    if (error) {
+      throw new Error(error.message ?? "Could not save the photo.");
+    }
+  }
+
   async function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     // Allow choosing the same file again later.
@@ -125,6 +139,7 @@ function ProfileForm({
       const body = new FormData();
       body.set("image", file);
 
+      // 1) Upload the file to ImgBB.
       const response = await fetch("/api/images/upload", {
         method: "POST",
         body,
@@ -142,11 +157,29 @@ function ProfileForm({
         throw new Error("Image upload returned an invalid response.");
       }
 
+      // 2) Save the ImgBB URL on the user immediately.
+      await saveImageUrl(payload.url);
+
       setImageUrl(payload.url);
-      toast.success("Photo uploaded. Click Save Changes to apply it.");
+      toast.success("Profile photo uploaded and saved.");
     } catch (cause) {
       toast.error(
         cause instanceof Error ? cause.message : "Could not upload the photo.",
+      );
+    } finally {
+      setIsUploading(false);
+    }
+  }
+
+  async function handleRemoveImage() {
+    setIsUploading(true);
+    try {
+      await saveImageUrl("");
+      setImageUrl("");
+      toast.success("Profile photo removed.");
+    } catch (cause) {
+      toast.error(
+        cause instanceof Error ? cause.message : "Could not remove the photo.",
       );
     } finally {
       setIsUploading(false);
@@ -281,7 +314,7 @@ function ProfileForm({
               {imageUrl && (
                 <button
                   type="button"
-                  onClick={() => setImageUrl("")}
+                  onClick={() => void handleRemoveImage()}
                   disabled={isUploading || isSaving}
                   className="inline-flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-semibold text-red-300 transition hover:text-red-200 disabled:opacity-50"
                 >
@@ -291,7 +324,8 @@ function ProfileForm({
               )}
             </div>
             <p className="mt-1.5 text-xs text-white/40">
-              JPG, PNG, WebP or GIF. Maximum 5 MB.
+              JPG, PNG, WebP or GIF. Maximum 5 MB. The photo is hosted on ImgBB
+              and saved immediately.
             </p>
           </div>
 

@@ -77,6 +77,30 @@ export type AdminUserFilters = {
   role?: "vendor" | "customer" | "admin";
 };
 
+export type AdminTransactionVendor = {
+  _id?: string;
+  name?: string;
+  email?: string;
+  businessName?: string;
+  image?: string;
+};
+
+export type AdminTransaction = {
+  _id: string;
+  vendorId?: string;
+  plan?: string;
+  kind?: string;
+  amount: number;
+  currency?: string;
+  status: string;
+  stripeSessionId?: string | null;
+  stripeInvoiceId?: string | null;
+  stripeSubscriptionId?: string | null;
+  periodEnd?: string | null;
+  createdAt: string;
+  vendor?: AdminTransactionVendor | null;
+};
+
 export type ReviewTargetType = "menuItem" | "restaurant";
 
 export type ItemReview = {
@@ -621,4 +645,27 @@ export async function deleteAdminMenuItem(token: string, id: string) {
   return request(`/admin/menu-items/${encodeURIComponent(id)}`, token, {
     method: "DELETE",
   });
+}
+
+function isAdminTransaction(value: unknown): value is AdminTransaction {
+  return (
+    isRecord(value) &&
+    typeof value._id === "string" &&
+    typeof value.amount === "number" &&
+    typeof value.status === "string" &&
+    typeof value.createdAt === "string"
+  );
+}
+
+/** Every Premium payment on the platform, newest first (admin only). */
+export async function getAdminTransactions(
+  token: string,
+  signal?: AbortSignal,
+): Promise<AdminTransaction[]> {
+  const payload = await request("/admin/transactions", token, { signal });
+  const list = getArrayPayload(payload, "transactions");
+  if (!list.every(isAdminTransaction)) {
+    throw new Error("The backend returned an invalid transactions response.");
+  }
+  return list;
 }

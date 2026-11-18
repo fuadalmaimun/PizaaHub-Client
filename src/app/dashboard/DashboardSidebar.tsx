@@ -106,6 +106,11 @@ function getSidebarItems(role: DashboardRole): SidebarItem[] {
       href: "/dashboard/admin/menu-items",
       icon: Pizza,
     },
+    {
+      label: "Transactions",
+      href: "/dashboard/admin/transactions",
+      icon: CreditCard,
+    },
     profile,
   ];
 }
