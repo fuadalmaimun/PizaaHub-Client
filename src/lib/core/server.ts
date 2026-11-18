@@ -29,6 +29,31 @@ export type VendorOrder = {
   createdAt?: string;
 };
 
+export type CustomerOrder = {
+  _id?: string;
+  id?: string;
+  itemId?: string;
+  itemName?: string;
+  itemImage?: string | null;
+  images?: string[];
+  itemPrice?: number | null;
+  vendorId?: string;
+  vendorName?: string;
+  vendorBusinessName?: string;
+  deliveryDate?: string;
+  deliveryAddress?: string;
+  message?: string;
+  status?: string;
+  createdAt?: string;
+};
+
+export type CustomerOrderInput = {
+  itemId: string;
+  deliveryDate: string;
+  deliveryAddress: string;
+  message?: string;
+};
+
 type RequestOptions = {
   method?: "GET" | "POST" | "PATCH" | "DELETE";
   body?: unknown;
@@ -140,6 +165,14 @@ function isVendorOrder(value: unknown): value is VendorOrder {
   );
 }
 
+function isCustomerOrder(value: unknown): value is CustomerOrder {
+  return (
+    isRecord(value) &&
+    (typeof value._id === "string" || typeof value.id === "string") &&
+    typeof value.status === "string"
+  );
+}
+
 export async function getVendorOverview(token: string, signal?: AbortSignal) {
   return request("/vendor/overview", token, { signal });
 }
@@ -203,5 +236,40 @@ export async function updateVendorOrder(
   return request(`/vendor/orders/${encodeURIComponent(id)}`, token, {
     method: "PATCH",
     body: { status },
+  });
+}
+
+export async function getCustomerOverview(
+  token: string,
+  signal?: AbortSignal,
+) {
+  return request("/customer/overview", token, { signal });
+}
+
+export async function getCustomerOrders(
+  token: string,
+  signal?: AbortSignal,
+): Promise<CustomerOrder[]> {
+  const payload = await request("/customer/orders", token, { signal });
+  const customerOrders = getCollection(payload, "orders");
+  if (!customerOrders.every(isCustomerOrder)) {
+    throw new Error("The backend returned an invalid customer order.");
+  }
+  return customerOrders;
+}
+
+export async function createCustomerOrder(
+  token: string,
+  order: CustomerOrderInput,
+) {
+  return request("/orders", token, {
+    method: "POST",
+    body: order,
+  });
+}
+
+export async function cancelCustomerOrder(token: string, id: string) {
+  return request(`/customer/orders/${encodeURIComponent(id)}`, token, {
+    method: "PATCH",
   });
 }

@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, MapPin, Pizza, Star, Store } from "lucide-react";
+import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { authClient } from "@/lib/auth-client";
+import { createCustomerOrder } from "@/lib/core/server";
 import { getMenuItems } from "@/lib/core/menu-items";
 import type { MenuItem } from "@/lib/types/menu";
 
@@ -25,6 +31,14 @@ function vendorName(item: MenuItem) {
   );
 }
 
+function todayDateInputValue() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export default function MenuItemDetailsPage() {
   const { Id: id } = useParams<{ Id: string }>();
   const router = useRouter();
@@ -32,6 +46,12 @@ export default function MenuItemDetailsPage() {
   const [loadedId, setLoadedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [isOrderFormOpen, setIsOrderFormOpen] = useState(false);
+  const [deliveryDate, setDeliveryDate] = useState(todayDateInputValue);
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
+  const [orderError, setOrderError] = useState<string | null>(null);
   const { data: session, isPending: isSessionPending } =
     authClient.useSession();
 
@@ -143,6 +163,56 @@ export default function MenuItemDetailsPage() {
   const isVendorOwner =
     user.role === "vendor" && item.vendorId === user.id;
   const canOrder = isCustomer && !isBlocked;
+  const itemIsOrderable =
+    item !== null &&
+    item.status === "approved" &&
+    item.isAvailable !== false &&
+    item.isActive !== false;
+  const canPlaceOrder = canOrder && !isVendorOwner && itemIsOrderable;
+
+  async function handlePlaceOrder(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const user = session?.user;
+    if (!user) {
+      router.replace("/sign-in");
+      return;
+    }
+    if (user.role !== "customer" || isBlocked || isVendorOwner) {
+      toast.error("Your account is not allowed to order this item.");
+      return;
+    }
+    if (!itemIsOrderable) {
+      toast.error("This menu item is no longer available for ordering.");
+      return;
+    }
+
+    const token = session?.session.token;
+    const itemId = item?._id ?? item?.id ?? id;
+    if (!token || !itemId) {
+      toast.error("Your session or menu item is unavailable. Please try again.");
+      return;
+    }
+
+    setIsSubmittingOrder(true);
+    setOrderError(null);
+    try {
+      await createCustomerOrder(token, {
+        itemId,
+        deliveryDate,
+        deliveryAddress: deliveryAddress.trim(),
+        ...(message.trim() ? { message: message.trim() } : {}),
+      });
+      toast.success("Order placed successfully.");
+      router.push("/dashboard/customer/orders");
+    } catch (cause) {
+      const errorMessage =
+        cause instanceof Error ? cause.message : "Could not place your order.";
+      setOrderError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmittingOrder(false);
+    }
+  }
 
   return (
     <main className="min-h-[70svh] bg-[#08090b] px-5 pb-16 pt-10 text-white sm:px-8 sm:pb-20 lg:px-12">
@@ -252,19 +322,97 @@ export default function MenuItemDetailsPage() {
 
             <div className="mt-6 rounded-xl border border-emerald-400/15 bg-emerald-400/4 p-5">
               <h2 className="text-lg font-semibold">Order this item</h2>
-              {canOrder ? (
+              {canPlaceOrder ? (
                 <>
                   <p className="mt-2 text-sm leading-6 text-white/60">
                     Food orders do not require online payment.
                   </p>
-                  <button
-                    type="button"
-                    disabled
-                    title="Order submission is not configured yet."
-                    className="mt-4 w-full cursor-not-allowed rounded-lg bg-emerald-600/50 px-4 py-3 text-sm font-semibold text-white/70"
-                  >
-                    Order placement coming soon
-                  </button>
+                  {!isOrderFormOpen ? (
+                    <Button
+                      type="button"
+                      onClick={() => setIsOrderFormOpen(true)}
+                      className="mt-4 w-full bg-emerald-600 py-5 text-white hover:bg-emerald-500"
+                    >
+                      Order Now
+                    </Button>
+                  ) : (
+                    <form
+                      onSubmit={handlePlaceOrder}
+                      className="mt-5 space-y-4"
+                    >
+                      <div className="space-y-2">
+                        <Label htmlFor="deliveryDate" className="text-white/80">
+                          Delivery Date
+                        </Label>
+                        <Input
+                          id="deliveryDate"
+                          type="date"
+                          min={todayDateInputValue()}
+                          required
+                          value={deliveryDate}
+                          onChange={(event) =>
+                            setDeliveryDate(event.target.value)
+                          }
+                          className="h-11 border-white/15 bg-[#090a0b] text-white [color-scheme:dark]"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label
+                          htmlFor="deliveryAddress"
+                          className="text-white/80"
+                        >
+                          Delivery Address
+                        </Label>
+                        <Input
+                          id="deliveryAddress"
+                          required
+                          autoComplete="street-address"
+                          value={deliveryAddress}
+                          onChange={(event) =>
+                            setDeliveryAddress(event.target.value)
+                          }
+                          placeholder="Enter your delivery address"
+                          className="h-11 border-white/15 bg-[#090a0b] text-white placeholder:text-white/35"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="orderMessage" className="text-white/80">
+                          Message (optional)
+                        </Label>
+                        <Textarea
+                          id="orderMessage"
+                          rows={3}
+                          value={message}
+                          onChange={(event) => setMessage(event.target.value)}
+                          placeholder="Add delivery instructions"
+                          className="border-white/15 bg-[#090a0b] text-white placeholder:text-white/35"
+                        />
+                      </div>
+                      {orderError && (
+                        <p role="alert" className="text-sm text-red-300">
+                          {orderError}
+                        </p>
+                      )}
+                      <div className="flex flex-wrap gap-3">
+                        <Button
+                          type="submit"
+                          disabled={isSubmittingOrder}
+                          className="flex-1 bg-emerald-600 py-5 text-white hover:bg-emerald-500"
+                        >
+                          {isSubmittingOrder ? "Placing order..." : "Place Order"}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={isSubmittingOrder}
+                          onClick={() => setIsOrderFormOpen(false)}
+                          className="border-white/15 bg-transparent py-5 text-white hover:bg-white/5 hover:text-white"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </form>
+                  )}
                 </>
               ) : (
                 <p className="mt-2 text-sm leading-6 text-white/60">
@@ -272,7 +420,9 @@ export default function MenuItemDetailsPage() {
                     ? "Your account is blocked and cannot place orders."
                     : isVendorOwner
                       ? "You cannot order your own menu item."
-                      : "Only customers can place food orders."}
+                      : !itemIsOrderable
+                        ? "This menu item is not available for ordering."
+                        : "Only customers can place food orders."}
                 </p>
               )}
             </div>
