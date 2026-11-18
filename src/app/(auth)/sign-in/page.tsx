@@ -26,7 +26,9 @@ export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {},
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
 
@@ -38,7 +40,9 @@ export default function SignInPage() {
   }, [isPending, session, router]);
 
   useEffect(() => {
-    if (new URLSearchParams(window.location.search).get("oauthError") === "google") {
+    if (
+      new URLSearchParams(window.location.search).get("oauthError") === "google"
+    ) {
       toast.error("Google sign in was cancelled or failed. Please try again.");
       router.replace("/sign-in");
     }
@@ -101,7 +105,9 @@ export default function SignInPage() {
       });
 
       if (error) {
-        toast.error(error.message ?? "Google sign in failed. Please try again.");
+        toast.error(
+          error.message ?? "Google sign in failed. Please try again.",
+        );
         setIsGoogleSubmitting(false);
       }
     } catch {
@@ -127,10 +133,7 @@ export default function SignInPage() {
       <form onSubmit={handleSubmit} noValidate>
         <div className="flex flex-col gap-3">
           <div>
-            <label
-              htmlFor="email"
-              className="sr-only"
-            >
+            <label htmlFor="email" className="sr-only">
               Email address
             </label>
             <div className="relative">
@@ -211,7 +214,6 @@ export default function SignInPage() {
               </>
             )}
           </Button>
-
         </div>
       </form>
 
@@ -233,7 +235,9 @@ export default function SignInPage() {
         ) : (
           <GoogleIcon className="size-4" />
         )}
-        {isGoogleSubmitting ? "Connecting to Google..." : "Continue with Google"}
+        {isGoogleSubmitting
+          ? "Connecting to Google..."
+          : "Continue with Google"}
       </Button>
 
       <p className="pt-4 text-center text-sm text-white/60">

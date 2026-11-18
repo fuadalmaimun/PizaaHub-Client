@@ -5,14 +5,22 @@ import { mongodbAdapter } from "@better-auth/mongo-adapter";
 const client = new MongoClient(process.env.MONGODB_URI!);
 
 const db = client.db(process.env.DB_NAME);
+const authBaseURL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : process.env.BETTER_AUTH_URL;
 
 export const auth = betterAuth({
   database: mongodbAdapter(db, {
     client,
   }),
 
-  baseURL: process.env.BETTER_AUTH_URL,
+  baseURL: authBaseURL,
   secret: process.env.BETTER_AUTH_SECRET,
+  trustedOrigins:
+    process.env.NODE_ENV === "development"
+      ? ["http://localhost:3000"]
+      : undefined,
 
   emailAndPassword: {
     enabled: true,

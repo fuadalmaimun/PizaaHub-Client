@@ -179,7 +179,6 @@ export default function SignUpPage() {
         callbackURL: "/auth/callback",
         newUserCallbackURL: "/auth/callback",
         errorCallbackURL: "/sign-up?oauthError=google",
-        additionalData: { role },
       });
 
       if (error) {
@@ -418,6 +417,10 @@ export default function SignUpPage() {
         )}
         {isGoogleSubmitting ? "Connecting to Google..." : "Continue with Google"}
       </Button>
+
+      <p className="mt-2 text-center text-xs text-white/50">
+        Google accounts are created as customer accounts.
+      </p>
 
       <p className="pt-3 text-center text-sm text-white/60">
         Already have an account?{" "}
