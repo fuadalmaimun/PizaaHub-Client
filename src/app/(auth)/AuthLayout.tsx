@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Pizza } from "lucide-react";
 
 type AuthLayoutProps = {
   children: ReactNode;
@@ -38,7 +37,22 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
               href="/"
               className="relative z-10 inline-flex w-fit items-center gap-2 text-lg font-extrabold tracking-tight"
             >
-              <Pizza aria-hidden="true" className="text-amber-400" size={29} />
+              <svg
+                aria-hidden="true"
+                className="text-amber-400"
+                width="29"
+                height="29"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M15.5 5.5 19 2l3 3-3.5 3.5" />
+                <path d="M2 22c1.5-6 6-10.5 12-12l5 5C17.5 21 13 25 7 26" />
+                <path d="m14 10 5 5M8 16h.01M12 13h.01M11 20h.01" />
+              </svg>
               <span>
                 Pizza<span className="text-emerald-400">Hub.</span>
               </span>
