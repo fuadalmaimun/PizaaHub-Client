@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -100,12 +100,6 @@ function getSidebarItems(role: DashboardRole): SidebarItem[] {
       href: "/dashboard/admin/menu-items",
       icon: Pizza,
     },
-    {
-      label: "Transactions",
-      href: "/dashboard/admin/transactions",
-      icon: CreditCard,
-    },
-    profile,
   ];
 }
 
@@ -165,14 +159,11 @@ function SidebarPanel({
 export default function DashboardSidebar() {
   const pathname = usePathname();
   const { data: session, isPending } = authClient.useSession();
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [mobileOpenPath, setMobileOpenPath] = useState<string | null>(null);
   const user = session?.user;
   const role =
     user && isDashboardRole(user.role) ? user.role : undefined;
-
-  useEffect(() => {
-    setIsMobileOpen(false);
-  }, [pathname]);
+  const isMobileOpen = mobileOpenPath === pathname;
 
   if (isPending || !role || user?.isBlocked) return null;
 
@@ -185,7 +176,9 @@ export default function DashboardSidebar() {
           type="button"
           aria-expanded={isMobileOpen}
           aria-controls="mobile-dashboard-sidebar"
-          onClick={() => setIsMobileOpen((open) => !open)}
+          onClick={() =>
+            setMobileOpenPath(isMobileOpen ? null : pathname)
+          }
           className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-[#111315] px-3 py-2.5 text-sm font-semibold text-white/85 transition hover:bg-white/5"
         >
           {isMobileOpen ? (
@@ -202,7 +195,7 @@ export default function DashboardSidebar() {
           <button
             type="button"
             aria-label="Close dashboard navigation"
-            onClick={() => setIsMobileOpen(false)}
+            onClick={() => setMobileOpenPath(null)}
             className="fixed inset-x-0 bottom-0 top-24 z-40 bg-black/70 lg:hidden"
           />
           <aside
@@ -213,7 +206,7 @@ export default function DashboardSidebar() {
               role={role}
               pathname={pathname}
               items={items}
-              onNavigate={() => setIsMobileOpen(false)}
+              onNavigate={() => setMobileOpenPath(null)}
             />
           </aside>
         </>

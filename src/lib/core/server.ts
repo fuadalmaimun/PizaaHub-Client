@@ -54,6 +54,23 @@ export type CustomerOrderInput = {
   message?: string;
 };
 
+export type AdminUser = {
+  _id?: string;
+  id?: string;
+  name: string;
+  email: string;
+  role: string;
+  isBlocked?: boolean;
+  image?: string;
+  businessName?: string;
+  createdAt?: string;
+};
+
+export type AdminUserFilters = {
+  search?: string;
+  role?: "vendor" | "customer" | "admin";
+};
+
 type RequestOptions = {
   method?: "GET" | "POST" | "PATCH" | "DELETE";
   body?: unknown;
@@ -69,6 +86,10 @@ function apiUrl(path: string) {
     throw new Error("NEXT_PUBLIC_API_URL is not configured.");
   }
   return `${BASE_URL.replace(/\/+$/, "")}/${path.replace(/^\/+/, "")}`;
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 async function getErrorMessage(response: Response) {
@@ -149,6 +170,15 @@ function getCollection(
   throw new Error(`The backend returned an invalid ${collectionName} response.`);
 }
 
+function getArrayPayload(payload: unknown, key: string): unknown[] {
+  if (Array.isArray(payload)) return payload;
+  if (isRecord(payload)) {
+    if (Array.isArray(payload[key])) return payload[key];
+    if ("data" in payload) return getArrayPayload(payload.data, key);
+  }
+  throw new Error(`The backend returned an invalid ${key} response.`);
+}
+
 function isMenuItem(value: unknown): value is MenuItem {
   return (
     isRecord(value) &&
@@ -156,6 +186,16 @@ function isMenuItem(value: unknown): value is MenuItem {
     typeof value.description === "string" &&
     typeof value.price === "number" &&
     typeof value.category === "string"
+  );
+}
+
+function isAdminUser(value: unknown): value is AdminUser {
+  return (
+    isRecord(value) &&
+    (typeof value._id === "string" || typeof value.id === "string") &&
+    typeof value.name === "string" &&
+    typeof value.email === "string" &&
+    typeof value.role === "string"
   );
 }
 
@@ -271,6 +311,78 @@ export async function createCustomerOrder(
 
 export async function cancelCustomerOrder(token: string, id: string) {
   return request(`/customer/orders/${encodeURIComponent(id)}`, token, {
+    method: "DELETE",
+  });
+}
+
+export async function getAdminOverview(token: string, signal?: AbortSignal) {
+  return request("/admin/overview", token, { signal });
+}
+
+export async function getAdminUsers(
+  token: string,
+  filters: AdminUserFilters = {},
+  signal?: AbortSignal,
+): Promise<AdminUser[]> {
+  const query = new URLSearchParams();
+  if (filters.search?.trim()) {
+    query.set("search", escapeRegExp(filters.search.trim()));
+  }
+  if (filters.role) query.set("role", filters.role);
+  const suffix = query.size > 0 ? `?${query.toString()}` : "";
+  const payload = await request(`/admin/users${suffix}`, token, { signal });
+  const users = getArrayPayload(payload, "users");
+  if (!users.every(isAdminUser)) {
+    throw new Error("The backend returned an invalid admin users response.");
+  }
+  return users;
+}
+
+export async function updateAdminUserBlockStatus(
+  token: string,
+  id: string,
+  isBlocked: boolean,
+) {
+  return request(`/admin/users/${encodeURIComponent(id)}`, token, {
+    method: "PATCH",
+    body: { isBlocked },
+  });
+}
+
+export async function getAdminMenuItems(
+  token: string,
+  filters: { search?: string; status?: string } = {},
+  signal?: AbortSignal,
+): Promise<MenuItem[]> {
+  const query = new URLSearchParams();
+  if (filters.search?.trim()) {
+    query.set("search", escapeRegExp(filters.search.trim()));
+  }
+  if (filters.status) query.set("status", filters.status);
+  const suffix = query.size > 0 ? `?${query.toString()}` : "";
+  const payload = await request(`/admin/menu-items${suffix}`, token, {
+    signal,
+  });
+  const items = getArrayPayload(payload, "menuItems");
+  if (!items.every(isMenuItem)) {
+    throw new Error("The backend returned an invalid admin menu items response.");
+  }
+  return items;
+}
+
+export async function updateAdminMenuItemStatus(
+  token: string,
+  id: string,
+  status: "approved" | "rejected",
+) {
+  return request(`/admin/menu-items/${encodeURIComponent(id)}`, token, {
+    method: "PATCH",
+    body: { status },
+  });
+}
+
+export async function deleteAdminMenuItem(token: string, id: string) {
+  return request(`/admin/menu-items/${encodeURIComponent(id)}`, token, {
     method: "DELETE",
   });
 }
