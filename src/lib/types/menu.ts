@@ -9,6 +9,7 @@ export type MenuItem = {
   image?: string;
   images?: string[];
   rating?: number;
+  reviewCount?: number;
   status?: "pending" | "approved" | "rejected" | "inactive";
   isAvailable?: boolean;
   isActive?: boolean;

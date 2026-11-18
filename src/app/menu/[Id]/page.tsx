@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, MapPin, Pizza, Star, Store } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
+import FavoriteButton from "@/components/FavoriteButton";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ import { authClient } from "@/lib/auth-client";
 import { createCustomerOrder } from "@/lib/core/server";
 import { getMenuItems } from "@/lib/core/menu-items";
 import type { MenuItem } from "@/lib/types/menu";
+import ReviewSection from "../ReviewSection";
 
 function itemName(item: MenuItem) {
   return item.itemName ?? item.name ?? "Pizza";
@@ -169,6 +171,7 @@ export default function MenuItemDetailsPage() {
     item.isAvailable !== false &&
     item.isActive !== false;
   const canPlaceOrder = canOrder && !isVendorOwner && itemIsOrderable;
+  const menuItemId = item._id ?? item.id ?? id;
 
   async function handlePlaceOrder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -279,9 +282,12 @@ export default function MenuItemDetailsPage() {
               {item.category}
             </p>
             <div className="mt-2 flex flex-wrap items-start justify-between gap-3">
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                {itemName(item)}
-              </h1>
+              <div className="flex min-w-0 flex-wrap items-center gap-3">
+                <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                  {itemName(item)}
+                </h1>
+                <FavoriteButton itemId={menuItemId} />
+              </div>
               {typeof item.rating === "number" && (
                 <span className="inline-flex items-center gap-1 rounded-full border border-amber-300/20 bg-amber-300/5 px-3 py-1 text-sm text-amber-300">
                   <Star
@@ -427,6 +433,21 @@ export default function MenuItemDetailsPage() {
               )}
             </div>
           </section>
+        </div>
+
+        <div className="mt-10 grid gap-6 lg:grid-cols-2">
+          <ReviewSection
+            targetType="menuItem"
+            targetId={menuItemId}
+            title={`Reviews for ${itemName(item)}`}
+          />
+          {item.vendorId && (
+            <ReviewSection
+              targetType="restaurant"
+              targetId={item.vendorId}
+              title={`Reviews for ${vendorName(item)}`}
+            />
+          )}
         </div>
       </div>
     </main>

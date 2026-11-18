@@ -19,6 +19,7 @@ import { toast } from "@/components/ui/sonner";
 
 import { authClient } from "@/lib/auth-client";
 import { dashboardPath, profileSettingsPath } from "@/lib/dashboard";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const publicNavigation = [
   { label: "Home", href: "/" },
@@ -154,17 +155,14 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const headerRef = useRef<HTMLElement>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [menuOpenPath, setMenuOpenPath] = useState<string | null>(null);
+  const [profileOpenPath, setProfileOpenPath] = useState<string | null>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
   const roleLinks = user ? roleNavigation[user.role] ?? [] : [];
-
-  useEffect(() => {
-    setIsMenuOpen(false);
-    setIsProfileOpen(false);
-  }, [pathname]);
+  const isMenuOpen = menuOpenPath === pathname;
+  const isProfileOpen = profileOpenPath === pathname;
 
   useEffect(() => {
     if (!isProfileOpen) return;
@@ -174,12 +172,12 @@ export default function Navbar() {
         event.target instanceof Node &&
         !headerRef.current?.contains(event.target)
       ) {
-        setIsProfileOpen(false);
+        setProfileOpenPath(null);
       }
     }
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setIsProfileOpen(false);
+      if (event.key === "Escape") setProfileOpenPath(null);
     }
 
     document.addEventListener("pointerdown", handlePointerDown);
@@ -191,8 +189,8 @@ export default function Navbar() {
   }, [isProfileOpen]);
 
   function closeMenus() {
-    setIsMenuOpen(false);
-    setIsProfileOpen(false);
+    setMenuOpenPath(null);
+    setProfileOpenPath(null);
   }
 
   async function handleSignOut() {
@@ -269,6 +267,7 @@ export default function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 lg:flex">
+          <ThemeToggle />
           {isPending ? (
             <span
               aria-label="Loading account"
@@ -282,7 +281,9 @@ export default function Navbar() {
               profileHref={profileSettingsPath(user.role)}
               isOpen={isProfileOpen}
               isSigningOut={isSigningOut}
-              onToggle={() => setIsProfileOpen((open) => !open)}
+              onToggle={() =>
+                setProfileOpenPath(isProfileOpen ? null : pathname)
+              }
               onClose={closeMenus}
               onSignOut={handleSignOut}
             />
@@ -310,8 +311,8 @@ export default function Navbar() {
           aria-expanded={isMenuOpen}
           aria-controls="mobile-navigation"
           onClick={() => {
-            setIsMenuOpen((open) => !open);
-            setIsProfileOpen(false);
+            setMenuOpenPath(isMenuOpen ? null : pathname);
+            setProfileOpenPath(null);
           }}
           className="rounded-lg p-2 text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-emerald-400 lg:hidden"
         >
@@ -330,6 +331,10 @@ export default function Navbar() {
         >
           <div className="flex flex-col">
             {renderNavigation(true)}
+            <div className="flex items-center justify-between border-t border-white/10 px-3 py-3">
+              <span className="text-sm text-white/60">Appearance</span>
+              <ThemeToggle />
+            </div>
             {isPending ? (
               <span className="mx-3 mt-2 h-10 animate-pulse rounded-lg bg-white/10" />
             ) : user ? (
@@ -341,7 +346,9 @@ export default function Navbar() {
                 isOpen={isProfileOpen}
                 isSigningOut={isSigningOut}
                 compact
-                onToggle={() => setIsProfileOpen((open) => !open)}
+                onToggle={() =>
+                  setProfileOpenPath(isProfileOpen ? null : pathname)
+                }
                 onClose={closeMenus}
                 onSignOut={handleSignOut}
               />

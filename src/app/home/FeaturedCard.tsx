@@ -74,6 +74,11 @@ export default function FeaturedCard({
             <span className="inline-flex shrink-0 items-center gap-1 text-sm text-amber-300">
               <Star aria-hidden="true" className="fill-current" size={14} />
               {item.rating.toFixed(1)}
+              {item.reviewCount ? (
+                <span className="text-xs text-white/45">
+                  ({item.reviewCount})
+                </span>
+              ) : null}
             </span>
           )}
         </div>

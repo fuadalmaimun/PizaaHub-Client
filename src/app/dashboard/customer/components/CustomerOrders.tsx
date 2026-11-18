@@ -49,6 +49,46 @@ function formatDate(value?: string) {
       });
 }
 
+function formatDateTime(value?: string) {
+  if (!value) return "Time unavailable";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? value
+    : date.toLocaleString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      });
+}
+
+function timelineEvents(order: CustomerOrder) {
+  if (order.statusHistory?.length) return order.statusHistory;
+  return [
+    {
+      status: order.status ?? "pending",
+      changedAt: order.updatedAt ?? order.createdAt ?? "",
+      actorRole: "system",
+    },
+  ];
+}
+
+function statusLabel(status: string) {
+  switch (status.toLowerCase()) {
+    case "pending":
+      return "Order placed";
+    case "accepted":
+      return "Order accepted";
+    case "rejected":
+      return "Order rejected";
+    case "cancelled":
+      return "Order cancelled";
+    default:
+      return status;
+  }
+}
+
 function statusStyle(status?: string) {
   switch (status?.toLowerCase()) {
     case "accepted":
@@ -341,6 +381,41 @@ export default function CustomerOrders() {
                           )}
                           <p>Item ID: {order.itemId ?? "Not provided"}</p>
                           {order.message && <p>Message: {order.message}</p>}
+                        </div>
+                        <div className="mt-4 border-t border-white/10 pt-3">
+                          <h3 className="text-sm font-semibold text-white/85">
+                            Order status timeline
+                          </h3>
+                          <ol className="mt-3 space-y-3">
+                            {timelineEvents(order).map((event, eventIndex) => (
+                              <li
+                                key={`${event.status}-${event.changedAt}-${eventIndex}`}
+                                className="relative flex gap-3 text-sm"
+                              >
+                                <span
+                                  aria-hidden="true"
+                                  className={`mt-1.5 size-2.5 shrink-0 rounded-full ${
+                                    event.status === status
+                                      ? "bg-emerald-400 ring-4 ring-emerald-400/10"
+                                      : "bg-white/25"
+                                  }`}
+                                />
+                                <div>
+                                  <p className="font-medium capitalize text-white/80">
+                                    {statusLabel(event.status)}
+                                  </p>
+                                  <time className="text-xs text-white/45">
+                                    {formatDateTime(event.changedAt)}
+                                  </time>
+                                </div>
+                              </li>
+                            ))}
+                          </ol>
+                          {!order.statusHistory?.length && status !== "pending" && (
+                            <p className="mt-2 text-xs text-white/40">
+                              Earlier status history is unavailable for this order.
+                            </p>
+                          )}
                         </div>
                       </details>
 

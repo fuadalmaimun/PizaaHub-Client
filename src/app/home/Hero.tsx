@@ -49,7 +49,10 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative isolate min-h-[calc(100svh-4rem)] overflow-hidden bg-[#08090b] text-white">
+    <section
+      data-theme-lock="dark"
+      className="relative isolate min-h-[calc(100svh-4rem)] overflow-hidden bg-[#08090b] text-white"
+    >
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_78%_46%,rgba(54,63,77,0.44),transparent_43%),linear-gradient(110deg,#050505_0%,#08090c_56%,#11151c_100%)]"

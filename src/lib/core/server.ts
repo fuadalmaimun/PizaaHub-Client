@@ -44,6 +44,12 @@ export type CustomerOrder = {
   deliveryAddress?: string;
   message?: string;
   status?: string;
+  statusHistory?: Array<{
+    status: string;
+    changedAt: string;
+    actorRole?: string;
+  }>;
+  updatedAt?: string;
   createdAt?: string;
 };
 
@@ -69,6 +75,31 @@ export type AdminUser = {
 export type AdminUserFilters = {
   search?: string;
   role?: "vendor" | "customer" | "admin";
+};
+
+export type ReviewTargetType = "menuItem" | "restaurant";
+
+export type ItemReview = {
+  _id?: string;
+  customerId?: string;
+  customerName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  updatedAt?: string;
+};
+
+export type ReviewSummary = {
+  reviews: ItemReview[];
+  averageRating: number;
+  reviewCount: number;
+};
+
+export type ReviewInput = {
+  targetType: ReviewTargetType;
+  targetId: string;
+  rating: number;
+  comment?: string;
 };
 
 type RequestOptions = {
@@ -111,10 +142,10 @@ async function getErrorMessage(response: Response) {
 
 async function request(
   path: string,
-  token: string,
+  token: string | null,
   options: RequestOptions = {},
 ): Promise<unknown> {
-  if (!token.trim()) {
+  if (token !== null && !token.trim()) {
     throw new Error("Your session token is missing. Please sign in again.");
   }
 
@@ -123,7 +154,7 @@ async function request(
     signal: options.signal,
     cache: "no-store",
     headers: {
-      Authorization: `Bearer ${token}`,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.body === undefined
         ? {}
         : { "Content-Type": "application/json" }),
@@ -211,6 +242,16 @@ function isCustomerOrder(value: unknown): value is CustomerOrder {
     isRecord(value) &&
     (typeof value._id === "string" || typeof value.id === "string") &&
     typeof value.status === "string"
+  );
+}
+
+function isItemReview(value: unknown): value is ItemReview {
+  return (
+    isRecord(value) &&
+    typeof value.customerName === "string" &&
+    typeof value.rating === "number" &&
+    typeof value.comment === "string" &&
+    typeof value.createdAt === "string"
   );
 }
 
@@ -312,6 +353,66 @@ export async function createCustomerOrder(
 export async function cancelCustomerOrder(token: string, id: string) {
   return request(`/customer/orders/${encodeURIComponent(id)}`, token, {
     method: "DELETE",
+  });
+}
+
+export async function getCustomerFavorites(
+  token: string,
+  signal?: AbortSignal,
+): Promise<MenuItem[]> {
+  const payload = await request("/customer/favorites", token, { signal });
+  const items = getCollection(payload, "menuItems");
+  if (!items.every(isMenuItem)) {
+    throw new Error("The backend returned an invalid favorites response.");
+  }
+  return items;
+}
+
+export async function addCustomerFavorite(token: string, itemId: string) {
+  return request("/customer/favorites", token, {
+    method: "POST",
+    body: { itemId },
+  });
+}
+
+export async function removeCustomerFavorite(token: string, itemId: string) {
+  return request(`/customer/favorites/${encodeURIComponent(itemId)}`, token, {
+    method: "DELETE",
+  });
+}
+
+export async function getReviews(
+  targetType: ReviewTargetType,
+  targetId: string,
+  signal?: AbortSignal,
+): Promise<ReviewSummary> {
+  const query = new URLSearchParams({ targetType, targetId });
+  const payload = await request(`/reviews?${query}`, null, { signal });
+  if (!isRecord(payload)) {
+    throw new Error("The backend returned invalid review data.");
+  }
+  const reviews = payload?.reviews;
+  if (
+    !payload ||
+    !Array.isArray(reviews) ||
+    !reviews.every(isItemReview) ||
+    typeof payload.averageRating !== "number" ||
+    typeof payload.reviewCount !== "number"
+  ) {
+    throw new Error("The backend returned invalid review data.");
+  }
+
+  return {
+    reviews,
+    averageRating: payload.averageRating,
+    reviewCount: payload.reviewCount,
+  };
+}
+
+export async function submitReview(token: string, review: ReviewInput) {
+  return request("/reviews", token, {
+    method: "POST",
+    body: review,
   });
 }
 

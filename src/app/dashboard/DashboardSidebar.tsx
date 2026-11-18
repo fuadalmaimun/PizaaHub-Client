@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   ClipboardList,
   CreditCard,
+  Heart,
   LayoutDashboard,
   Menu,
   Pizza,
@@ -56,6 +57,11 @@ function getSidebarItems(role: DashboardRole): SidebarItem[] {
         label: "My Orders",
         href: "/dashboard/customer/orders",
         icon: ClipboardList,
+      },
+      {
+        label: "My Wishlist",
+        href: "/dashboard/customer/favorites",
+        icon: Heart,
       },
       profile,
     ];
