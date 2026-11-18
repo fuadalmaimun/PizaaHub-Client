@@ -261,11 +261,14 @@ export async function getVendorOverview(token: string, signal?: AbortSignal) {
 
 export type VendorSubscription = {
   subscriptionPlan: "free" | "premium";
+  subscriptionStatus?: string | null;
+  subscriptionExpiresAt?: string | null;
+  cancelAtPeriodEnd?: boolean;
 };
 
 /**
- * Current vendor plan. Premium is only ever set by the verified Stripe
- * webhook on the backend, never by this page.
+ * Current vendor plan. Premium is only ever set by Stripe (webhook or the
+ * verified payment check on the backend), never by this page.
  */
 export async function getVendorSubscription(
   token: string,
@@ -276,6 +279,15 @@ export async function getVendorSubscription(
     return {
       subscriptionPlan:
         payload.subscriptionPlan === "premium" ? "premium" : "free",
+      subscriptionStatus:
+        typeof payload.subscriptionStatus === "string"
+          ? payload.subscriptionStatus
+          : null,
+      subscriptionExpiresAt:
+        typeof payload.subscriptionExpiresAt === "string"
+          ? payload.subscriptionExpiresAt
+          : null,
+      cancelAtPeriodEnd: payload.cancelAtPeriodEnd === true,
     };
   }
   throw new Error("The backend returned an invalid subscription response.");
@@ -292,6 +304,94 @@ export async function createVendorCheckoutSession(
     return payload.url;
   }
   throw new Error("Stripe did not return a checkout URL.");
+}
+
+/**
+ * Turns the yearly renewal on or off. Access stays until the paid period ends.
+ */
+export async function cancelVendorSubscription(
+  token: string,
+  cancel: boolean,
+): Promise<{ cancelAtPeriodEnd: boolean; subscriptionExpiresAt: string | null }> {
+  const payload = await request("/vendor/cancel-subscription", token, {
+    method: "POST",
+    body: { cancel },
+  });
+
+  if (!isRecord(payload)) {
+    throw new Error("The backend returned an invalid subscription response.");
+  }
+
+  return {
+    cancelAtPeriodEnd: payload.cancelAtPeriodEnd === true,
+    subscriptionExpiresAt:
+      typeof payload.subscriptionExpiresAt === "string"
+        ? payload.subscriptionExpiresAt
+        : null,
+  };
+}
+
+export type VendorTransaction = {
+  _id: string;
+  plan?: string;
+  kind?: string;
+  amount: number;
+  currency?: string;
+  status: string;
+  stripeSessionId?: string | null;
+  stripeInvoiceId?: string | null;
+  stripeSubscriptionId?: string | null;
+  periodEnd?: string | null;
+  createdAt: string;
+};
+
+function isVendorTransaction(value: unknown): value is VendorTransaction {
+  return (
+    isRecord(value) &&
+    typeof value._id === "string" &&
+    typeof value.amount === "number" &&
+    typeof value.status === "string" &&
+    typeof value.createdAt === "string"
+  );
+}
+
+/** Payment history shown on the vendor subscription page. */
+export async function getVendorTransactions(
+  token: string,
+  signal?: AbortSignal,
+): Promise<VendorTransaction[]> {
+  const payload = await request("/vendor/transactions", token, { signal });
+  const list = getArrayPayload(payload, "transactions");
+  if (!list.every(isVendorTransaction)) {
+    throw new Error("The backend returned an invalid transaction.");
+  }
+  return list;
+}
+
+/** One payment, looked up by the Stripe checkout session id. */
+export async function getVendorTransaction(
+  token: string,
+  sessionId: string,
+): Promise<VendorTransaction> {
+  const payload = await request(
+    `/vendor/transactions/${encodeURIComponent(sessionId)}`,
+    token,
+  );
+  if (!isVendorTransaction(payload)) {
+    throw new Error("The backend returned an invalid transaction.");
+  }
+  return payload;
+}
+
+/**
+ * Fallback for a delayed webhook: the backend checks the payment directly
+ * with Stripe and saves it once. Safe to call more than once.
+ */
+export async function verifyVendorPayment(token: string, sessionId: string) {
+  return request("/vendor/verify-payment", token, {
+    method: "POST",
+    body: { sessionId },
+  });
 }
 
 export async function getVendorMenuItems(
