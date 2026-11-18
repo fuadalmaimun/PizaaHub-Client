@@ -100,6 +100,7 @@ async function request(
   const response = await fetch(apiUrl(path), {
     method: options.method ?? "GET",
     signal: options.signal,
+    cache: "no-store",
     headers: {
       Authorization: `Bearer ${token}`,
       ...(options.body === undefined
@@ -270,6 +271,6 @@ export async function createCustomerOrder(
 
 export async function cancelCustomerOrder(token: string, id: string) {
   return request(`/customer/orders/${encodeURIComponent(id)}`, token, {
-    method: "PATCH",
+    method: "DELETE",
   });
 }

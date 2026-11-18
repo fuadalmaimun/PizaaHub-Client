@@ -6,6 +6,15 @@ import Link from "next/link";
 import { ClipboardList, Pizza, RefreshCw, X } from "lucide-react";
 import { toast } from "sonner";
 
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   cancelCustomerOrder,
@@ -62,6 +71,9 @@ export default function CustomerOrders() {
   const [error, setError] = useState<string | null>(null);
   const [reloadCount, setReloadCount] = useState(0);
   const [busyOrderId, setBusyOrderId] = useState<string | null>(null);
+  const [orderToCancel, setOrderToCancel] = useState<CustomerOrder | null>(
+    null,
+  );
 
   useEffect(() => {
     if (isPending || !isCustomer || isBlocked) return;
@@ -69,7 +81,11 @@ export default function CustomerOrders() {
     const controller = new AbortController();
     void getCustomerOrders(token ?? "", controller.signal)
       .then((customerOrders) => {
-        setOrders(customerOrders);
+        setOrders(
+          customerOrders.filter(
+            (order) => order.status?.toLowerCase() !== "cancelled",
+          ),
+        );
         setError(null);
       })
       .catch((cause: unknown) => {
@@ -92,7 +108,11 @@ export default function CustomerOrders() {
 
     setIsRefreshing(true);
     try {
-      setOrders(await getCustomerOrders(token));
+      setOrders(
+        (await getCustomerOrders(token)).filter(
+          (order) => order.status?.toLowerCase() !== "cancelled",
+        ),
+      );
       setError(null);
     } catch (cause) {
       const message = errorMessage(cause, "Could not refresh your orders.");
@@ -113,9 +133,11 @@ export default function CustomerOrders() {
     setBusyOrderId(id);
     try {
       await cancelCustomerOrder(token, id);
-      toast.success("Order cancelled.");
-      setIsLoading(true);
-      setReloadCount((count) => count + 1);
+      setOrders((currentOrders) =>
+        currentOrders.filter((currentOrder) => orderId(currentOrder) !== id),
+      );
+      setOrderToCancel(null);
+      toast.success("Order cancelled and permanently deleted.");
     } catch (cause) {
       toast.error(errorMessage(cause, "Could not cancel this order."));
     } finally {
@@ -175,6 +197,42 @@ export default function CustomerOrders() {
           {error}
         </p>
       )}
+
+      <AlertDialog
+        open={orderToCancel !== null}
+        onOpenChange={(open) => {
+          if (!open && !busyOrderId) setOrderToCancel(null);
+        }}
+      >
+        <AlertDialogContent className="border border-white/10 bg-[#15171b] text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancel this order?</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/60">
+              {orderToCancel
+                ? `Your pending order for ${orderItemName(orderToCancel)} will be permanently deleted. This cannot be undone.`
+                : "This pending order will be permanently deleted. This cannot be undone."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="border-white/10 bg-white/[0.03]">
+            <AlertDialogCancel
+              disabled={busyOrderId !== null}
+              className="border-white/15 bg-transparent text-white hover:bg-white/5 hover:text-white"
+            >
+              Keep order
+            </AlertDialogCancel>
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={busyOrderId !== null || !orderToCancel}
+              onClick={() => {
+                if (orderToCancel) void cancelOrder(orderToCancel);
+              }}
+            >
+              {busyOrderId ? "Deleting..." : "Permanently cancel"}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {isLoading ? (
         <div role="status" className="mt-8 space-y-4">
@@ -291,10 +349,10 @@ export default function CustomerOrders() {
                           type="button"
                           variant="destructive"
                           disabled={!id || busyOrderId === id}
-                          onClick={() => void cancelOrder(order)}
+                          onClick={() => setOrderToCancel(order)}
                         >
                           <X aria-hidden="true" />
-                          {busyOrderId === id ? "Cancelling..." : "Cancel order"}
+                          Cancel order
                         </Button>
                       )}
                     </div>
