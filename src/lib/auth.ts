@@ -1,4 +1,3 @@
-
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
@@ -19,28 +18,33 @@ export const auth = betterAuth({
     enabled: true,
     minPasswordLength: 6,
   },
-
-user: {
-  additionalFields: {
-    role: {
-      type: ["vendor", "customer"],
-      required: true,
-      defaultValue: "customer",
-      input: true,
-    },
-    isBlocked: {
-      type: "boolean",
-      required: true,
-      defaultValue: false,
-      input: false,
-    },
-    subscriptionPlan: {
-      type: "string",
-      required: true,
-      defaultValue: "free",
-      input: false,
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
-},
 
+  user: {
+    additionalFields: {
+      role: {
+        type: ["vendor", "customer"],
+        required: true,
+        defaultValue: "customer",
+        input: true,
+      },
+      isBlocked: {
+        type: "boolean",
+        required: true,
+        defaultValue: false,
+        input: false,
+      },
+      subscriptionPlan: {
+        type: "string",
+        required: true,
+        defaultValue: "free",
+        input: false,
+      },
+    },
+  },
 });

@@ -123,11 +123,14 @@ html.light body {
   color: #30251f;
 }
 
+html.light [class*="bg-[#070809]"],
 html.light [class*="bg-[#08090b]"],
 html.light [class*="bg-[#090a0b]"],
+html.light [class*="bg-[#101112]"],
 html.light [class*="bg-[#0c0e10]"],
 html.light [class*="bg-[#111315]"],
-html.light [class*="bg-[#15171b]"] {
+html.light [class*="bg-[#15171b]"],
+html.light [class*="bg-[#080808]"] {
   background-color: #fffaf2 !important;
 }
 
@@ -162,37 +165,25 @@ html.light [class*="text-red-300"] {
   color: #a52a2a !important;
 }
 
+html.light [class*="text-gray-300"],
+html.light [class*="text-gray-400"],
+html.light [class*="text-gray-500"] {
+  color: #65584f !important;
+}
+
 html.light [class*="bg-emerald-"][class*="text-white"],
 html.light [class*="bg-red-"][class*="text-white"] {
   color: #fff !important;
 }
 
-html.light [data-theme-lock="dark"] {
-  color: #fff !important;
-}
-
-html.light section[data-theme-lock="dark"] {
-  background-color: #08090b !important;
-}
-
-html.light footer[data-theme-lock="dark"] {
-  background-color: #080808 !important;
-}
-
-html.light [data-theme-lock="dark"] [class*="text-white"] {
-  color: #fff !important;
-}
-
-html.light [data-theme-lock="dark"] [class*="border-white/10"] {
-  border-color: rgb(255 255 255 / 10%) !important;
-}
-
-html.light [data-theme-lock="dark"] [class*="border-white/15"] {
-  border-color: rgb(255 255 255 / 15%) !important;
-}
-
-html.light [data-theme-lock="dark"] [class*="border-white/45"] {
-  border-color: rgb(255 255 255 / 45%) !important;
+html.light [data-light-theme="hero-gradient"] {
+  background-image:
+    radial-gradient(
+      ellipse at 78% 46%,
+      rgb(255 239 218 / 76%),
+      transparent 43%
+    ),
+    linear-gradient(110deg, #fffaf2 0%, #fff7eb 56%, #f5e9d9 100%) !important;
 }
 
 @layer base {

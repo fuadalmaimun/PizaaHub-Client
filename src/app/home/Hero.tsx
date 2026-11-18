@@ -49,12 +49,10 @@ export default function Hero() {
   };
 
   return (
-    <section
-      data-theme-lock="dark"
-      className="relative isolate min-h-[calc(100svh-4rem)] overflow-hidden bg-[#08090b] text-white"
-    >
+    <section className="relative isolate min-h-[calc(100svh-4rem)] overflow-hidden bg-[#08090b] text-white">
       <div
         aria-hidden="true"
+        data-light-theme="hero-gradient"
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_78%_46%,rgba(54,63,77,0.44),transparent_43%),linear-gradient(110deg,#050505_0%,#08090c_56%,#11151c_100%)]"
       />
 
@@ -101,7 +99,7 @@ export default function Hero() {
             fill
             sizes="(max-width: 768px) 100vw, 65vw"
             unoptimized
-            className="object-cover object-center mix-blend-screen opacity-95 mask-[radial-gradient(ellipse_at_60%_48%,black_45%,transparent_78%)]"
+            className="object-cover object-center mix-blend-multiply opacity-95 dark:mix-blend-screen mask-[radial-gradient(ellipse_at_60%_48%,black_45%,transparent_78%)]"
           />
         </div>
 

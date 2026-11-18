@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/sonner";
@@ -18,10 +18,11 @@ import {
 
 import AuthLayout from "../AuthLayout";
 import { authClient } from "@/lib/auth-client";
+import GoogleIcon from "@/components/GoogleIcon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-type SignupRole = "customer" | "vendor" | "admin";
+type SignupRole = "customer" | "vendor";
 
 /** Min 6 chars, at least one uppercase and one lowercase letter. */
 function validatePassword(password: string): string | null {
@@ -53,6 +54,14 @@ export default function SignUpPage() {
     password?: string;
   }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("oauthError") === "google") {
+      toast.error("Google sign up was cancelled or failed. Please try again.");
+      router.replace("/sign-up");
+    }
+  }, [router]);
 
   const passwordHint = useMemo(() => {
     if (!password) return null;
@@ -91,7 +100,7 @@ export default function SignUpPage() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (isSubmitting) return;
+    if (isSubmitting || isGoogleSubmitting) return;
     if (!validate()) {
       toast.error("Please fix the highlighted fields.");
       return;
@@ -157,6 +166,29 @@ export default function SignUpPage() {
       );
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  async function handleGoogleSignUp() {
+    if (isSubmitting || isGoogleSubmitting) return;
+    setIsGoogleSubmitting(true);
+
+    try {
+      const { error } = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/auth/callback",
+        newUserCallbackURL: "/auth/callback",
+        errorCallbackURL: "/sign-up?oauthError=google",
+        additionalData: { role },
+      });
+
+      if (error) {
+        toast.error(error.message ?? "Google sign up failed. Please try again.");
+        setIsGoogleSubmitting(false);
+      }
+    } catch {
+      toast.error("Google sign up failed. Please try again.");
+      setIsGoogleSubmitting(false);
     }
   }
 
@@ -297,15 +329,14 @@ export default function SignUpPage() {
                 value={role}
                 onChange={(event) => {
                   const value = event.target.value;
-                  if (value === "customer" || value === "vendor" || value === "admin") {
+                  if (value === "customer" || value === "vendor") {
                     setRole(value);
                   }
                 }}
-                className="h-9 w-full appearance-none rounded-lg border border-white/15 bg-[#101112] pl-10 pr-9 text-sm text-white outline-none transition focus:border-emerald-500 focus:ring-3 focus:ring-emerald-500/30"
+                className="h-9 w-full appearance-none rounded-lg border border-white/15 bg-[#fffaf2] pl-10 pr-9 text-sm text-[#30251f] outline-none transition focus:border-emerald-500 focus:ring-3 focus:ring-emerald-500/30 dark:bg-[#101112] dark:text-white"
               >
                 <option value="customer">Customer</option>
                 <option value="vendor">Vendor</option>
-                <option value="admin">admin</option>
               </select>
               <span
                 aria-hidden="true"
@@ -348,7 +379,7 @@ export default function SignUpPage() {
           <Button
             type="submit"
             size="lg"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isGoogleSubmitting}
             className="mt-1 h-10 w-full bg-emerald-600 font-semibold text-white hover:bg-emerald-500"
           >
             {isSubmitting ? (
@@ -364,17 +395,39 @@ export default function SignUpPage() {
             )}
           </Button>
 
-          <p className="pt-1 text-center text-sm text-white/60">
-            Already have an account?{" "}
-            <Link
-              href="/sign-in"
-              className="font-semibold text-emerald-400 hover:text-emerald-300"
-            >
-              Sign In
-            </Link>
-          </p>
         </div>
       </form>
+
+      <div className="my-4 flex items-center gap-3 text-xs text-white/45">
+        <span className="h-px flex-1 bg-white/15" />
+        OR
+        <span className="h-px flex-1 bg-white/15" />
+      </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        disabled={isSubmitting || isGoogleSubmitting}
+        onClick={handleGoogleSignUp}
+        className="h-10 w-full border-white/15 bg-white/5 font-semibold text-[#30251f] hover:bg-white/10 dark:text-white"
+      >
+        {isGoogleSubmitting ? (
+          <Loader2 className="size-4 animate-spin" />
+        ) : (
+          <GoogleIcon className="size-4" />
+        )}
+        {isGoogleSubmitting ? "Connecting to Google..." : "Continue with Google"}
+      </Button>
+
+      <p className="pt-3 text-center text-sm text-white/60">
+        Already have an account?{" "}
+        <Link
+          href="/sign-in"
+          className="font-semibold text-emerald-400 hover:text-emerald-300"
+        >
+          Sign In
+        </Link>
+      </p>
     </AuthLayout>
   );
 }

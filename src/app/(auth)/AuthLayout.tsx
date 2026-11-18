@@ -12,8 +12,8 @@ const heroImage =
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <main className="flex flex-1 bg-[#070809] px-3 py-3 text-white sm:px-5 sm:py-5">
-      <div className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col overflow-hidden rounded-xl border border-white/15 bg-[#090a0b] shadow-[0_24px_100px_rgba(0,0,0,0.55)]">
+    <main className="flex w-full flex-1 bg-[#fffaf2] text-[#30251f] dark:bg-[#070809] dark:text-white">
+      <div className="flex w-full flex-1 flex-col overflow-hidden bg-[#fffaf2] dark:bg-[#090a0b]">
         <div className="grid flex-1 md:grid-cols-[1.02fr_0.98fr]">
           <section className="relative flex min-h-[380px] flex-col justify-between overflow-hidden px-6 py-6 sm:px-9 sm:py-8 md:min-h-0 lg:px-10">
             <Image
@@ -23,11 +23,11 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
               priority
               sizes="(max-width: 768px) 100vw, 52vw"
               unoptimized
-              className="object-cover object-center opacity-75"
+              className="object-cover object-center opacity-60 dark:opacity-75"
             />
             <div
               aria-hidden="true"
-              className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.72)_0%,rgba(0,0,0,0.12)_37%,rgba(0,0,0,0.88)_100%),linear-gradient(90deg,rgba(0,0,0,0.45),transparent_85%)]"
+              className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,250,242,0.72)_0%,rgba(255,250,242,0.4)_37%,rgba(255,250,242,0.82)_100%),linear-gradient(90deg,rgba(255,250,242,0.56),transparent_85%)] dark:bg-[linear-gradient(180deg,rgba(0,0,0,0.72)_0%,rgba(0,0,0,0.12)_37%,rgba(0,0,0,0.88)_100%),linear-gradient(90deg,rgba(0,0,0,0.45),transparent_85%)]"
             />
             <div
               aria-hidden="true"

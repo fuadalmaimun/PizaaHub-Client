@@ -4,10 +4,18 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/sonner";
-import { ArrowRight, Eye, EyeOff, Loader2, LockKeyhole, Mail } from "lucide-react";
+import {
+  ArrowRight,
+  Eye,
+  EyeOff,
+  Loader2,
+  LockKeyhole,
+  Mail,
+} from "lucide-react";
 
 import AuthLayout from "../AuthLayout";
 import { authClient } from "@/lib/auth-client";
+import GoogleIcon from "@/components/GoogleIcon";
 import { dashboardPath } from "@/lib/dashboard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +28,7 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
 
   const { data: session, isPending } = authClient.useSession();
   useEffect(() => {
@@ -27,6 +36,13 @@ export default function SignInPage() {
       router.replace(dashboardPath(session.user.role));
     }
   }, [isPending, session, router]);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("oauthError") === "google") {
+      toast.error("Google sign in was cancelled or failed. Please try again.");
+      router.replace("/sign-in");
+    }
+  }, [router]);
 
   function validate(): boolean {
     const nextErrors: typeof errors = {};
@@ -44,7 +60,7 @@ export default function SignInPage() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (isSubmitting) return;
+    if (isSubmitting || isGoogleSubmitting) return;
     if (!validate()) {
       toast.error("Please fix the highlighted fields.");
       return;
@@ -69,6 +85,28 @@ export default function SignInPage() {
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  async function handleGoogleSignIn() {
+    if (isSubmitting || isGoogleSubmitting) return;
+    setIsGoogleSubmitting(true);
+
+    try {
+      const { error } = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/auth/callback",
+        newUserCallbackURL: "/auth/callback",
+        errorCallbackURL: "/sign-in?oauthError=google",
+      });
+
+      if (error) {
+        toast.error(error.message ?? "Google sign in failed. Please try again.");
+        setIsGoogleSubmitting(false);
+      }
+    } catch {
+      toast.error("Google sign in failed. Please try again.");
+      setIsGoogleSubmitting(false);
     }
   }
 
@@ -158,7 +196,7 @@ export default function SignInPage() {
           <Button
             type="submit"
             size="lg"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isGoogleSubmitting}
             className="mt-2 h-10 w-full bg-emerald-600 font-semibold text-white hover:bg-emerald-500"
           >
             {isSubmitting ? (
@@ -174,17 +212,39 @@ export default function SignInPage() {
             )}
           </Button>
 
-          <p className="pt-1 text-center text-sm text-white/60">
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/sign-up"
-              className="font-semibold text-emerald-400 hover:text-emerald-300"
-            >
-              Create Account
-            </Link>
-          </p>
         </div>
       </form>
+
+      <div className="my-4 flex items-center gap-3 text-xs text-white/45">
+        <span className="h-px flex-1 bg-white/15" />
+        OR
+        <span className="h-px flex-1 bg-white/15" />
+      </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        disabled={isSubmitting || isGoogleSubmitting}
+        onClick={handleGoogleSignIn}
+        className="h-10 w-full border-white/15 bg-white/5 font-semibold text-[#30251f] hover:bg-white/10 dark:text-white"
+      >
+        {isGoogleSubmitting ? (
+          <Loader2 className="size-4 animate-spin" />
+        ) : (
+          <GoogleIcon className="size-4" />
+        )}
+        {isGoogleSubmitting ? "Connecting to Google..." : "Continue with Google"}
+      </Button>
+
+      <p className="pt-4 text-center text-sm text-white/60">
+        Don&apos;t have an account?{" "}
+        <Link
+          href="/sign-up"
+          className="font-semibold text-emerald-400 hover:text-emerald-300"
+        >
+          Create Account
+        </Link>
+      </p>
     </AuthLayout>
   );
 }
