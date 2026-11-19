@@ -22,7 +22,7 @@ import GoogleIcon from "@/components/GoogleIcon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-type SignupRole = "customer" | "vendor" | "admin";
+type SignupRole = "customer" | "vendor";
 
 /** Min 6 chars, at least one uppercase and one lowercase letter. */
 function validatePassword(password: string): string | null {
@@ -330,8 +330,7 @@ export default function SignUpPage() {
                   const value = event.target.value;
                   if (
                     value === "customer" ||
-                    value === "vendor" ||
-                    value === "admin"
+                    value === "vendor"
                   ) {
                     setRole(value);
                   }
@@ -340,7 +339,6 @@ export default function SignUpPage() {
               >
                 <option value="customer">Customer</option>
                 <option value="vendor">Vendor</option>
-                <option value="admin">Admin</option>
               </select>
               <span
                 aria-hidden="true"
