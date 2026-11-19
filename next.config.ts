@@ -2,13 +2,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // Profile photos and menu item images are hosted on ImgBB.
+    // Profile photos and menu item images are hosted on ImgBB (and other CDNs).
     remotePatterns: [
-      { protocol: "https", hostname: "i.ibb.co" },
-      { protocol: "https", hostname: "ibb.co" },
+      {
+        protocol: "https",
+        hostname: "**",
+      },
     ],
   },
-  /* config options here */
   reactCompiler: true,
   turbopack: {
     rules: {
