@@ -82,13 +82,13 @@ export default function AboutPage() {
 
       {/* Hero Section */}
       <section className="relative px-5 py-20 md:py-28">
-        <div className="absolute -right-40 -top-40 h-96 w-96 rounded-full bg-[#DDF477]/10 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#173D32]/10 blur-3xl" />
+        <div className="absolute -right-40 -top-40 h-96 w-96 rounded-full bg-[#ffbd00]/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#e50916]/10 blur-3xl" />
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-2">
 
           <div>
-            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#173D32]/20 bg-[#173D32]/5 px-4 py-2 text-sm font-semibold text-[#173D32] dark:border-[#DDF477]/20 dark:bg-[#DDF477]/10 dark:text-[#DDF477]">
+            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#e50916]/20 bg-[#e50916]/5 px-4 py-2 text-sm font-semibold text-[#e50916] dark:border-[#ffbd00]/20 dark:bg-[#ffbd00]/10 dark:text-[#ffbd00]">
               <Sparkles size={15} />
               Discover Our Story
             </div>
@@ -98,7 +98,7 @@ export default function AboutPage() {
               <br />
               Great Moments.
               <br />
-              <span className="text-[#173D32] dark:text-[#DDF477]">
+              <span className="text-[#e50916] dark:text-[#ffbd00]">
                 That's PizzaHub.
               </span>
             </h1>
@@ -112,7 +112,7 @@ export default function AboutPage() {
             <div className="mt-9 flex flex-wrap gap-4">
               <Link
                 href="/menu"
-                className="inline-flex items-center gap-2 rounded-full bg-[#173D32] px-7 py-3.5 font-semibold text-white shadow-lg shadow-[#173D32]/20 transition hover:-translate-y-1 hover:bg-[#245b4b] dark:bg-[#DDF477] dark:text-[#173D32] dark:hover:bg-[#eaff9c]"
+                className="inline-flex items-center gap-2 rounded-full bg-[#e50916] px-7 py-3.5 font-semibold text-white shadow-lg shadow-[#e50916]/20 transition hover:-translate-y-1 hover:bg-[#b80d18] dark:bg-[#ffbd00] dark:text-[#e50916] dark:hover:bg-[#ffd766]"
               >
                 Explore Menu
                 <ArrowRight size={18} />
@@ -120,7 +120,7 @@ export default function AboutPage() {
 
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 rounded-full border border-border px-7 py-3.5 font-semibold transition hover:border-[#173D32] hover:text-[#173D32] dark:hover:border-[#DDF477] dark:hover:text-[#DDF477]"
+                className="inline-flex items-center gap-2 rounded-full border border-border px-7 py-3.5 font-semibold transition hover:border-[#e50916] hover:text-[#e50916] dark:hover:border-[#ffbd00] dark:hover:text-[#ffbd00]"
               >
                 Contact Us
                 <ArrowUpRight size={18} />
@@ -130,7 +130,7 @@ export default function AboutPage() {
             <div className="mt-12 grid max-w-lg grid-cols-3 gap-4 border-t border-border pt-7">
               {highlights.map((item) => (
                 <div key={item.label}>
-                  <h3 className="text-xl font-extrabold text-[#173D32] dark:text-[#DDF477] md:text-2xl">
+                  <h3 className="text-xl font-extrabold text-[#e50916] dark:text-[#ffbd00] md:text-2xl">
                     {item.value}
                   </h3>
                   <p className="mt-1 text-xs text-muted-foreground md:text-sm">
@@ -143,18 +143,18 @@ export default function AboutPage() {
 
           {/* Hero Illustration */}
           <div className="relative mx-auto w-full max-w-lg">
-            <div className="absolute inset-5 rounded-full bg-[#DDF477]/30 blur-3xl" />
+            <div className="absolute inset-5 rounded-full bg-[#ffbd00]/30 blur-3xl" />
 
-            <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[3rem] border border-[#173D32]/10 bg-[#173D32] shadow-2xl dark:border-[#DDF477]/10">
+            <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[3rem] border border-[#e50916]/10 bg-[#e50916] shadow-2xl dark:border-[#ffbd00]/10">
               <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full border border-white/10" />
               <div className="absolute -bottom-24 -left-16 h-72 w-72 rounded-full border border-white/10" />
 
               <div className="relative flex flex-col items-center">
-                <div className="flex h-48 w-48 items-center justify-center rounded-full border-8 border-[#DDF477]/20 bg-[#DDF477] shadow-2xl sm:h-60 sm:w-60">
+                <div className="flex h-48 w-48 items-center justify-center rounded-full border-8 border-[#ffbd00]/20 bg-[#ffbd00] shadow-2xl sm:h-60 sm:w-60">
                   <Pizza
                     size={115}
                     strokeWidth={1.3}
-                    className="text-[#173D32] sm:h-36 sm:w-36"
+                    className="text-[#e50916] sm:h-36 sm:w-36"
                   />
                 </div>
 
@@ -162,7 +162,7 @@ export default function AboutPage() {
                   PizzaHub
                 </h2>
 
-                <p className="mt-2 text-sm tracking-[0.3em] text-[#DDF477]">
+                <p className="mt-2 text-sm tracking-[0.3em] text-[#ffbd00]">
                   TASTE THE DIFFERENCE
                 </p>
               </div>
@@ -171,13 +171,13 @@ export default function AboutPage() {
                 <ChefHat size={27} />
               </div>
 
-              <div className="absolute bottom-8 right-5 rounded-2xl border border-white/10 bg-white/10 p-3 text-[#DDF477] shadow-lg backdrop-blur-md">
+              <div className="absolute bottom-8 right-5 rounded-2xl border border-white/10 bg-white/10 p-3 text-[#ffbd00] shadow-lg backdrop-blur-md">
                 <Heart size={27} />
               </div>
             </div>
 
             <div className="absolute -bottom-5 -left-3 flex items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-xl sm:-left-8">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#DDF477]/30 text-[#173D32] dark:text-[#DDF477]">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ffbd00]/30 text-[#e50916] dark:text-[#ffbd00]">
                 <Star size={23} />
               </div>
               <div>
@@ -196,11 +196,11 @@ export default function AboutPage() {
         <div className="mx-auto grid max-w-7xl items-center gap-14 md:grid-cols-2">
 
           <div className="relative">
-            <div className="relative overflow-hidden rounded-[2rem] bg-[#173D32] p-8 text-white shadow-xl sm:p-12">
-              <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-[#DDF477]/10 blur-2xl" />
+            <div className="relative overflow-hidden rounded-[2rem] bg-[#e50916] p-8 text-white shadow-xl sm:p-12">
+              <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-[#ffbd00]/10 blur-2xl" />
 
               <div className="relative">
-                <span className="text-sm font-semibold uppercase tracking-[0.25em] text-[#DDF477]">
+                <span className="text-sm font-semibold uppercase tracking-[0.25em] text-[#ffbd00]">
                   Our Philosophy
                 </span>
 
@@ -208,7 +208,7 @@ export default function AboutPage() {
                   Bringing People Together, One Pizza at a Time.
                 </h2>
 
-                <div className="my-8 h-1 w-20 rounded-full bg-[#DDF477]" />
+                <div className="my-8 h-1 w-20 rounded-full bg-[#ffbd00]" />
 
                 <p className="max-w-md leading-8 text-white/75">
                   Great food has the power to create memorable moments.
@@ -217,7 +217,7 @@ export default function AboutPage() {
                 </p>
 
                 <div className="mt-10 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#DDF477] text-[#173D32]">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ffbd00] text-[#e50916]">
                     <Pizza size={25} />
                   </div>
                   <div>
@@ -232,7 +232,7 @@ export default function AboutPage() {
           </div>
 
           <div>
-            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#173D32] dark:text-[#DDF477]">
+            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#e50916] dark:text-[#ffbd00]">
               Who We Are
             </span>
 
@@ -254,7 +254,7 @@ export default function AboutPage() {
             </p>
 
             <div className="mt-9 flex items-center gap-4 rounded-2xl border border-border bg-card p-5">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#173D32]/10 text-[#173D32] dark:bg-[#DDF477]/10 dark:text-[#DDF477]">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e50916]/10 text-[#e50916] dark:bg-[#ffbd00]/10 dark:text-[#ffbd00]">
                 <Users size={25} />
               </div>
               <div>
@@ -272,7 +272,7 @@ export default function AboutPage() {
       <section className="px-5 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto mb-14 max-w-2xl text-center">
-            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#173D32] dark:text-[#DDF477]">
+            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#e50916] dark:text-[#ffbd00]">
               What Drives Us
             </span>
             <h2 className="mt-4 text-3xl font-extrabold sm:text-4xl">
@@ -286,11 +286,11 @@ export default function AboutPage() {
 
           <div className="grid gap-6 md:grid-cols-2">
             <div className="group rounded-3xl border border-border bg-card p-8 transition hover:-translate-y-1 hover:shadow-xl sm:p-10">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#173D32] text-[#DDF477]">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e50916] text-[#ffbd00]">
                 <Heart size={28} />
               </div>
 
-              <p className="mt-7 text-sm font-bold uppercase tracking-widest text-[#173D32] dark:text-[#DDF477]">
+              <p className="mt-7 text-sm font-bold uppercase tracking-widest text-[#e50916] dark:text-[#ffbd00]">
                 Our Mission
               </p>
 
@@ -305,12 +305,12 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="group rounded-3xl border border-[#173D32]/20 bg-[#173D32] p-8 text-white shadow-xl transition hover:-translate-y-1 sm:p-10">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#DDF477] text-[#173D32]">
+            <div className="group rounded-3xl border border-[#e50916]/20 bg-[#e50916] p-8 text-white shadow-xl transition hover:-translate-y-1 sm:p-10">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ffbd00] text-[#e50916]">
                 <Award size={28} />
               </div>
 
-              <p className="mt-7 text-sm font-bold uppercase tracking-widest text-[#DDF477]">
+              <p className="mt-7 text-sm font-bold uppercase tracking-widest text-[#ffbd00]">
                 Our Vision
               </p>
 
@@ -332,7 +332,7 @@ export default function AboutPage() {
       <section className="border-y border-border bg-muted/30 px-5 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto mb-14 max-w-2xl text-center">
-            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#173D32] dark:text-[#DDF477]">
+            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#e50916] dark:text-[#ffbd00]">
               The PizzaHub Difference
             </span>
             <h2 className="mt-4 text-3xl font-extrabold sm:text-4xl">
@@ -348,9 +348,9 @@ export default function AboutPage() {
             {features.map((feature) => (
               <div
                 key={feature.title}
-                className="group rounded-3xl border border-border bg-card p-7 transition duration-300 hover:-translate-y-2 hover:border-[#173D32]/40 hover:shadow-xl dark:hover:border-[#DDF477]/40"
+                className="group rounded-3xl border border-border bg-card p-7 transition duration-300 hover:-translate-y-2 hover:border-[#e50916]/40 hover:shadow-xl dark:hover:border-[#ffbd00]/40"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#173D32] text-[#DDF477] transition group-hover:scale-110">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e50916] text-[#ffbd00] transition group-hover:scale-110">
                   <feature.icon size={27} />
                 </div>
 
@@ -362,7 +362,7 @@ export default function AboutPage() {
                   {feature.description}
                 </p>
 
-                <div className="mt-6 h-1 w-10 rounded-full bg-[#DDF477] transition-all group-hover:w-20" />
+                <div className="mt-6 h-1 w-10 rounded-full bg-[#ffbd00] transition-all group-hover:w-20" />
               </div>
             ))}
           </div>
@@ -373,7 +373,7 @@ export default function AboutPage() {
       <section className="px-5 py-20 md:py-24">
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto mb-16 max-w-2xl text-center">
-            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#173D32] dark:text-[#DDF477]">
+            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#e50916] dark:text-[#ffbd00]">
               Simple & Convenient
             </span>
             <h2 className="mt-4 text-3xl font-extrabold sm:text-4xl">
@@ -387,10 +387,10 @@ export default function AboutPage() {
           <div className="grid gap-10 md:grid-cols-3">
             {steps.map((step, index) => (
               <div key={step.number} className="relative text-center">
-                <div className="relative mx-auto flex h-24 w-24 items-center justify-center rounded-[2rem] bg-[#173D32] text-[#DDF477] shadow-lg shadow-[#173D32]/20 transition hover:-translate-y-2">
+                <div className="relative mx-auto flex h-24 w-24 items-center justify-center rounded-[2rem] bg-[#e50916] text-[#ffbd00] shadow-lg shadow-[#e50916]/20 transition hover:-translate-y-2">
                   <step.icon size={38} />
 
-                  <span className="absolute -right-3 -top-3 flex h-9 w-9 items-center justify-center rounded-full border-4 border-background bg-[#DDF477] text-xs font-extrabold text-[#173D32]">
+                  <span className="absolute -right-3 -top-3 flex h-9 w-9 items-center justify-center rounded-full border-4 border-background bg-[#ffbd00] text-xs font-extrabold text-[#e50916]">
                     {step.number}
                   </span>
                 </div>
@@ -404,7 +404,7 @@ export default function AboutPage() {
                 </p>
 
                 {index !== 2 && (
-                  <ArrowRight className="absolute -right-5 top-9 hidden text-[#173D32]/30 dark:text-[#DDF477]/30 md:block" size={28} />
+                  <ArrowRight className="absolute -right-5 top-9 hidden text-[#e50916]/30 dark:text-[#ffbd00]/30 md:block" size={28} />
                 )}
               </div>
             ))}
@@ -414,18 +414,18 @@ export default function AboutPage() {
 
       {/* Final CTA */}
       <section className="px-5 pb-20 md:pb-24">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-[#173D32] px-6 py-16 text-center text-white sm:px-12 md:py-24">
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-[#e50916] px-6 py-16 text-center text-white sm:px-12 md:py-24">
           <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full border-[40px] border-white/5" />
           <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full border-[40px] border-white/5" />
 
           <div className="relative mx-auto max-w-2xl">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#DDF477] text-[#173D32]">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ffbd00] text-[#e50916]">
               <Pizza size={34} />
             </div>
 
             <h2 className="mt-8 text-3xl font-extrabold sm:text-5xl">
               Your Next Favorite Pizza
-              <span className="block text-[#DDF477]">
+              <span className="block text-[#ffbd00]">
                 Is Waiting for You!
               </span>
             </h2>
@@ -437,7 +437,7 @@ export default function AboutPage() {
 
             <Link
               href="/menu"
-              className="mt-9 inline-flex items-center gap-2 rounded-full bg-[#DDF477] px-8 py-4 font-bold text-[#173D32] transition hover:-translate-y-1 hover:bg-white"
+              className="mt-9 inline-flex items-center gap-2 rounded-full bg-[#ffbd00] px-8 py-4 font-bold text-[#e50916] transition hover:-translate-y-1 hover:bg-white"
             >
               Order Your Favorite Pizza
               <ArrowRight size={19} />

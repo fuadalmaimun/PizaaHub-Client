@@ -28,13 +28,13 @@ export type DashboardAccent =
 
 /** Chart-friendly hex values that match the dashboard accents. */
 export const CHART_COLORS: Record<DashboardAccent, string> = {
-  emerald: "#10b981",
-  amber: "#f59e0b",
-  sky: "#38bdf8",
-  violet: "#a78bfa",
-  orange: "#fb923c",
-  rose: "#fb7185",
-  teal: "#2dd4bf",
+  emerald: "#ed101b",
+  amber: "#ffbd00",
+  sky: "#ff7043",
+  violet: "#a85b25",
+  orange: "#ff8c1a",
+  rose: "#db2334",
+  teal: "#f0ad00",
 };
 
 type AccentClasses = {
@@ -48,7 +48,7 @@ type AccentClasses = {
 const ACCENTS: Record<DashboardAccent, AccentClasses> = {
   emerald: {
     chip: "bg-emerald-500/12 text-emerald-300",
-    bar: "bg-gradient-to-r from-emerald-500 to-teal-400",
+    bar: "bg-gradient-to-r from-emerald-500 to-amber-400",
     glow: "bg-emerald-500/15",
     text: "text-emerald-300",
     ring: "hover:border-emerald-400/30",
@@ -61,18 +61,18 @@ const ACCENTS: Record<DashboardAccent, AccentClasses> = {
     ring: "hover:border-amber-400/30",
   },
   sky: {
-    chip: "bg-sky-500/12 text-sky-300",
-    bar: "bg-gradient-to-r from-sky-500 to-cyan-400",
-    glow: "bg-sky-500/15",
-    text: "text-sky-300",
-    ring: "hover:border-sky-400/30",
+    chip: "bg-orange-500/12 text-orange-300",
+    bar: "bg-gradient-to-r from-orange-500 to-amber-400",
+    glow: "bg-orange-500/15",
+    text: "text-orange-300",
+    ring: "hover:border-orange-400/30",
   },
   violet: {
-    chip: "bg-violet-500/12 text-violet-300",
-    bar: "bg-gradient-to-r from-violet-500 to-fuchsia-400",
-    glow: "bg-violet-500/15",
-    text: "text-violet-300",
-    ring: "hover:border-violet-400/30",
+    chip: "bg-rose-500/12 text-rose-300",
+    bar: "bg-gradient-to-r from-rose-500 to-pink-400",
+    glow: "bg-rose-500/15",
+    text: "text-rose-300",
+    ring: "hover:border-rose-400/30",
   },
   orange: {
     chip: "bg-orange-500/12 text-orange-300",
@@ -89,11 +89,11 @@ const ACCENTS: Record<DashboardAccent, AccentClasses> = {
     ring: "hover:border-rose-400/30",
   },
   teal: {
-    chip: "bg-teal-500/12 text-teal-300",
-    bar: "bg-gradient-to-r from-teal-500 to-emerald-400",
-    glow: "bg-teal-500/15",
-    text: "text-teal-300",
-    ring: "hover:border-teal-400/30",
+    chip: "bg-amber-500/12 text-amber-300",
+    bar: "bg-gradient-to-r from-amber-500 to-yellow-400",
+    glow: "bg-amber-500/15",
+    text: "text-amber-300",
+    ring: "hover:border-amber-400/30",
   },
 };
 
@@ -388,7 +388,7 @@ export function ProfileCard({
               role === "admin"
                 ? "bg-amber-400 text-black"
                 : role === "vendor"
-                  ? "bg-sky-400 text-black"
+                  ? "bg-amber-400 text-black"
                   : "bg-emerald-400 text-black"
             }`}
             title={`${role} account`}
@@ -481,7 +481,7 @@ export function UsageMeter({
               ? "bg-gradient-to-r from-amber-400 to-yellow-300"
               : percent >= 100
                 ? "bg-gradient-to-r from-rose-500 to-orange-400"
-                : "bg-gradient-to-r from-emerald-500 to-teal-400"
+                : "bg-gradient-to-r from-emerald-500 to-amber-400"
           }`}
           style={{ width: `${Math.max(percent, used > 0 ? 8 : 0)}%` }}
         />

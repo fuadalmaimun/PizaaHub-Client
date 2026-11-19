@@ -89,17 +89,17 @@ export default function ContactPage() {
 
       {/* Hero Section */}
       <section className="relative px-5 py-24 md:py-32">
-        <div className="absolute -right-40 -top-40 h-96 w-96 rounded-full bg-[#DDF477]/10 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#173D32]/10 blur-3xl" />
+        <div className="absolute -right-40 -top-40 h-96 w-96 rounded-full bg-[#ffbd00]/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#e50916]/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-4xl text-center">
-          <span className="inline-block rounded-full border border-[#173D32]/20 bg-[#173D32]/5 px-5 py-2 text-sm font-semibold text-[#173D32] dark:border-[#DDF477]/20 dark:bg-[#DDF477]/10 dark:text-[#DDF477]">
+          <span className="inline-block rounded-full border border-[#e50916]/20 bg-[#e50916]/5 px-5 py-2 text-sm font-semibold text-[#e50916] dark:border-[#ffbd00]/20 dark:bg-[#ffbd00]/10 dark:text-[#ffbd00]">
             We'd Love to Hear From You
           </span>
 
           <h1 className="mt-8 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-7xl">
             Let's Start a
-            <span className="block text-[#173D32] dark:text-[#DDF477]">
+            <span className="block text-[#e50916] dark:text-[#ffbd00]">
               Conversation.
             </span>
           </h1>
@@ -112,7 +112,7 @@ export default function ContactPage() {
 
           <Link
             href="/menu"
-            className="mt-9 inline-flex items-center gap-3 rounded-full bg-[#173D32] px-8 py-4 font-semibold text-white transition hover:-translate-y-1 hover:bg-[#245b4b] dark:bg-[#DDF477] dark:text-[#173D32] dark:hover:bg-[#eaff9c]"
+            className="mt-9 inline-flex items-center gap-3 rounded-full bg-[#e50916] px-8 py-4 font-semibold text-white transition hover:-translate-y-1 hover:bg-[#b80d18] dark:bg-[#ffbd00] dark:text-[#e50916] dark:hover:bg-[#ffd766]"
           >
             Explore Our Menu
             <span>→</span>
@@ -124,7 +124,7 @@ export default function ContactPage() {
       <section className="border-y border-border bg-muted/30 px-5 py-20">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 text-center">
-            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#173D32] dark:text-[#DDF477]">
+            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#e50916] dark:text-[#ffbd00]">
               Contact Information
             </span>
 
@@ -141,13 +141,13 @@ export default function ContactPage() {
             {contactInfo.map((item, index) => (
               <div
                 key={item.title}
-                className="group rounded-3xl border border-border bg-card p-7 transition duration-300 hover:-translate-y-2 hover:border-[#173D32]/40 hover:shadow-xl dark:hover:border-[#DDF477]/40"
+                className="group rounded-3xl border border-border bg-card p-7 transition duration-300 hover:-translate-y-2 hover:border-[#e50916]/40 hover:shadow-xl dark:hover:border-[#ffbd00]/40"
               >
-                <span className="text-sm font-bold text-[#173D32]/50 dark:text-[#DDF477]/50">
+                <span className="text-sm font-bold text-[#e50916]/50 dark:text-[#ffbd00]/50">
                   0{index + 1}
                 </span>
 
-                <div className="my-5 h-1 w-12 rounded-full bg-[#DDF477] transition-all group-hover:w-20" />
+                <div className="my-5 h-1 w-12 rounded-full bg-[#ffbd00] transition-all group-hover:w-20" />
 
                 <h3 className="text-xl font-bold">{item.title}</h3>
 
@@ -156,12 +156,12 @@ export default function ContactPage() {
                     href={item.href}
                     target={item.href.startsWith("https") ? "_blank" : undefined}
                     rel="noreferrer"
-                    className="mt-3 block break-words font-semibold text-[#173D32] hover:underline dark:text-[#DDF477]"
+                    className="mt-3 block break-words font-semibold text-[#e50916] hover:underline dark:text-[#ffbd00]"
                   >
                     {item.value}
                   </a>
                 ) : (
-                  <p className="mt-3 font-semibold text-[#173D32] dark:text-[#DDF477]">
+                  <p className="mt-3 font-semibold text-[#e50916] dark:text-[#ffbd00]">
                     {item.value}
                   </p>
                 )}
@@ -180,13 +180,13 @@ export default function ContactPage() {
         <div className="mx-auto grid max-w-7xl items-start gap-14 lg:grid-cols-2">
 
           <div className="lg:sticky lg:top-28">
-            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#173D32] dark:text-[#DDF477]">
+            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#e50916] dark:text-[#ffbd00]">
               Get In Touch
             </span>
 
             <h2 className="mt-5 text-4xl font-extrabold leading-tight sm:text-6xl">
               Have Something
-              <span className="block text-[#173D32] dark:text-[#DDF477]">
+              <span className="block text-[#e50916] dark:text-[#ffbd00]">
                 On Your Mind?
               </span>
             </h2>
@@ -197,8 +197,8 @@ export default function ContactPage() {
               Send us a message and we'll be happy to help.
             </p>
 
-            <div className="mt-12 rounded-3xl bg-[#173D32] p-8 text-white sm:p-10">
-              <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#DDF477]">
+            <div className="mt-12 rounded-3xl bg-[#e50916] p-8 text-white sm:p-10">
+              <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#ffbd00]">
                 We're Here for You
               </span>
 
@@ -213,7 +213,7 @@ export default function ContactPage() {
 
               <a
                 href="mailto:hello@pizzahub.com"
-                className="mt-8 inline-flex items-center gap-2 font-semibold text-[#DDF477] hover:underline"
+                className="mt-8 inline-flex items-center gap-2 font-semibold text-[#ffbd00] hover:underline"
               >
                 Email Our Team <span>↗</span>
               </a>
@@ -227,7 +227,7 @@ export default function ContactPage() {
                   <a
                     key={social}
                     href="#"
-                    className="rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold transition hover:border-[#173D32] hover:bg-[#173D32] hover:text-white dark:hover:border-[#DDF477] dark:hover:bg-[#DDF477] dark:hover:text-[#173D32]"
+                    className="rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold transition hover:border-[#e50916] hover:bg-[#e50916] hover:text-white dark:hover:border-[#ffbd00] dark:hover:bg-[#ffbd00] dark:hover:text-[#e50916]"
                   >
                     {social}
                   </a>
@@ -260,7 +260,7 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Enter your name"
-                    className="w-full rounded-xl border border-border bg-background px-4 py-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-[#173D32] focus:ring-2 focus:ring-[#173D32]/10 dark:focus:border-[#DDF477]"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-[#e50916] focus:ring-2 focus:ring-[#e50916]/10 dark:focus:border-[#ffbd00]"
                   />
                 </div>
 
@@ -276,7 +276,7 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    className="w-full rounded-xl border border-border bg-background px-4 py-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-[#173D32] focus:ring-2 focus:ring-[#173D32]/10 dark:focus:border-[#DDF477]"
+                    className="w-full rounded-xl border border-border bg-background px-4 py-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-[#e50916] focus:ring-2 focus:ring-[#e50916]/10 dark:focus:border-[#ffbd00]"
                   />
                 </div>
               </div>
@@ -293,7 +293,7 @@ export default function ContactPage() {
                   value={formData.subject}
                   onChange={handleChange}
                   placeholder="What is this about?"
-                  className="w-full rounded-xl border border-border bg-background px-4 py-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-[#173D32] focus:ring-2 focus:ring-[#173D32]/10 dark:focus:border-[#DDF477]"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-[#e50916] focus:ring-2 focus:ring-[#e50916]/10 dark:focus:border-[#ffbd00]"
                 />
               </div>
 
@@ -309,13 +309,13 @@ export default function ContactPage() {
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Write your message here..."
-                  className="w-full resize-none rounded-xl border border-border bg-background px-4 py-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-[#173D32] focus:ring-2 focus:ring-[#173D32]/10 dark:focus:border-[#DDF477]"
+                  className="w-full resize-none rounded-xl border border-border bg-background px-4 py-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-[#e50916] focus:ring-2 focus:ring-[#e50916]/10 dark:focus:border-[#ffbd00]"
                 />
               </div>
 
               <button
                 type="submit"
-                className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#173D32] px-6 py-4 font-bold text-white transition hover:-translate-y-1 hover:bg-[#245b4b] dark:bg-[#DDF477] dark:text-[#173D32] dark:hover:bg-[#eaff9c]"
+                className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#e50916] px-6 py-4 font-bold text-white transition hover:-translate-y-1 hover:bg-[#b80d18] dark:bg-[#ffbd00] dark:text-[#e50916] dark:hover:bg-[#ffd766]"
               >
                 Send Message
                 <span>→</span>
@@ -333,7 +333,7 @@ export default function ContactPage() {
       <section className="border-t border-border bg-muted/30 px-5 py-20 md:py-24">
         <div className="mx-auto max-w-3xl">
           <div className="mb-12 text-center">
-            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#173D32] dark:text-[#DDF477]">
+            <span className="text-sm font-bold uppercase tracking-[0.2em] text-[#e50916] dark:text-[#ffbd00]">
               Common Questions
             </span>
 
@@ -357,7 +357,7 @@ export default function ContactPage() {
                   onClick={() =>
                     setOpenFaq(openFaq === index ? null : index)
                   }
-                  className="flex w-full items-center justify-between gap-5 p-6 text-left font-bold transition hover:text-[#173D32] dark:hover:text-[#DDF477]"
+                  className="flex w-full items-center justify-between gap-5 p-6 text-left font-bold transition hover:text-[#e50916] dark:hover:text-[#ffbd00]"
                 >
                   {faq.question}
 
@@ -383,18 +383,18 @@ export default function ContactPage() {
 
       {/* Final CTA */}
       <section className="px-5 py-20">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-[#173D32] px-6 py-16 text-center text-white sm:px-12 md:py-24">
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-[#e50916] px-6 py-16 text-center text-white sm:px-12 md:py-24">
           <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full border-[40px] border-white/5" />
           <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full border-[40px] border-white/5" />
 
           <div className="relative mx-auto max-w-2xl">
-            <span className="text-sm font-bold uppercase tracking-[0.3em] text-[#DDF477]">
+            <span className="text-sm font-bold uppercase tracking-[0.3em] text-[#ffbd00]">
               Your Pizza Journey Starts Here
             </span>
 
             <h2 className="mt-7 text-3xl font-extrabold sm:text-5xl">
               Good Times Start
-              <span className="block text-[#DDF477]">
+              <span className="block text-[#ffbd00]">
                 with Great Pizza!
               </span>
             </h2>
@@ -406,7 +406,7 @@ export default function ContactPage() {
 
             <Link
               href="/menu"
-              className="mt-9 inline-flex items-center gap-3 rounded-full bg-[#DDF477] px-8 py-4 font-bold text-[#173D32] transition hover:-translate-y-1 hover:bg-white"
+              className="mt-9 inline-flex items-center gap-3 rounded-full bg-[#ffbd00] px-8 py-4 font-bold text-[#e50916] transition hover:-translate-y-1 hover:bg-white"
             >
               Explore Menu <span>→</span>
             </Link>

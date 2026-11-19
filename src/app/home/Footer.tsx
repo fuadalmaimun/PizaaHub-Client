@@ -193,7 +193,10 @@ export default function Footer() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mb-12 flex flex-col justify-between gap-6 rounded-3xl border border-emerald-500/20 bg-gradient-to-r from-emerald-950/70 via-[#10251e] to-[#111a17] p-7 sm:flex-row sm:items-center sm:p-9">
+        <div
+          data-light-theme="footer-cta"
+          className="mb-12 flex flex-col justify-between gap-6 rounded-3xl border border-emerald-500/20 bg-gradient-to-r from-emerald-950/70 via-[#10251e] to-[#111a17] p-7 sm:flex-row sm:items-center sm:p-9"
+        >
           <div>
             <p className="text-xs font-bold tracking-[0.2em] text-emerald-400">
               YOUR NEXT FAVORITE SLICE

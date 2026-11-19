@@ -45,8 +45,8 @@ const roleWorkspaces: Record<DashboardRole, string> = {
 };
 
 const roleAccents: Record<DashboardRole, string> = {
-  customer: "from-emerald-500/25 to-teal-500/5 text-emerald-300",
-  vendor: "from-sky-500/25 to-emerald-500/5 text-sky-300",
+  customer: "from-emerald-500/25 to-amber-500/5 text-emerald-300",
+  vendor: "from-amber-500/25 to-emerald-500/5 text-amber-300",
   admin: "from-amber-500/25 to-orange-500/5 text-amber-300",
 };
 
