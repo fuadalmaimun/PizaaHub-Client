@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Pencil, Plus, RefreshCw, Store, Trash2 } from "lucide-react";
+import { Crown, Pencil, Plus, RefreshCw, Store, Trash2 } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 
 import {
@@ -38,6 +38,13 @@ function itemIsActive(item: MenuItem) {
   );
 }
 
+/** Free vendors may keep this many active items. Premium is unlimited. */
+const FREE_ACTIVE_ITEM_LIMIT = 3;
+
+function freePlanMessage() {
+  return `Your Free plan allows ${FREE_ACTIVE_ITEM_LIMIT} active menu items. Upgrade to Premium for unlimited items.`;
+}
+
 export default function VendorMenuItems() {
   const { user, token, isPending, isVendor, isBlocked } =
     useVendorDashboardAccess();
@@ -69,6 +76,10 @@ export default function VendorMenuItems() {
 
     return () => controller.abort();
   }, [isBlocked, isPending, isVendor, reloadCount, token]);
+
+  const isPremium = user?.subscriptionPlan === "premium";
+  const activeCount = items.filter(itemIsActive).length;
+  const limitReached = !isPremium && activeCount >= FREE_ACTIVE_ITEM_LIMIT;
 
   async function refreshItems() {
     if (!token) {
@@ -102,6 +113,12 @@ export default function VendorMenuItems() {
     const id = itemId(item);
     if (!token || !id) {
       toast.error("Could not identify this menu item.");
+      return;
+    }
+
+    // Free plan is limited to 3 active items.
+    if (!itemIsActive(item) && limitReached) {
+      toast.error(freePlanMessage());
       return;
     }
 
@@ -202,6 +219,39 @@ export default function VendorMenuItems() {
         >
           {error}
         </p>
+      )}
+
+      {!isPremium && (
+        <div
+          className={`mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm ${
+            limitReached
+              ? "border-amber-400/30 bg-amber-400/10 text-amber-100"
+              : "border-white/10 bg-white/[0.03] text-white/60"
+          }`}
+        >
+          <p className="flex items-start gap-2">
+            <Crown
+              aria-hidden="true"
+              size={16}
+              className="mt-0.5 shrink-0 text-amber-300"
+            />
+            <span>
+              <strong className="font-semibold text-white">
+                {activeCount} of {FREE_ACTIVE_ITEM_LIMIT}
+              </strong>{" "}
+              active items used on the Free plan.
+              {limitReached
+                ? " Deactivate an item or upgrade to Premium for unlimited items."
+                : " Upgrade to Premium for unlimited items and featured placement."}
+            </span>
+          </p>
+          <Link
+            href="/dashboard/vendor/subscription"
+            className="shrink-0 rounded-lg bg-amber-400 px-3 py-2 text-xs font-bold text-[#221703] transition hover:bg-amber-300"
+          >
+            Upgrade to Premium
+          </Link>
+        </div>
       )}
 
       {isLoading ? (
@@ -322,13 +372,19 @@ export default function VendorMenuItems() {
                           type="button"
                           disabled={!id || busyItemId === id}
                           onClick={() => void toggleAvailability(item)}
-                          className="rounded-lg border border-white/15 px-3 py-2 text-xs font-semibold text-white/75 transition hover:bg-white/5 disabled:opacity-40"
+                          className={`rounded-lg border px-3 py-2 text-xs font-semibold transition disabled:opacity-40 ${
+                            !active && limitReached
+                              ? "border-amber-400/40 text-amber-200 hover:bg-amber-400/10"
+                              : "border-white/15 text-white/75 hover:bg-white/5"
+                          }`}
                         >
                           {busyItemId === id
                             ? "Saving..."
                             : active
                               ? "Deactivate"
-                              : "Activate"}
+                              : !isPremium && limitReached
+                                ? "Upgrade to activate"
+                                : "Activate"}
                         </button>
                         <button
                           type="button"

@@ -609,6 +609,18 @@ export async function updateAdminUserBlockStatus(
   });
 }
 
+/** Moves a user to another role (admin or vendor). */
+export async function updateAdminUserRole(
+  token: string,
+  id: string,
+  role: "admin" | "vendor",
+) {
+  return request(`/admin/users/${encodeURIComponent(id)}`, token, {
+    method: "PATCH",
+    body: { role },
+  });
+}
+
 export async function getAdminMenuItems(
   token: string,
   filters: { search?: string; status?: string } = {},

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, MapPin, Pizza, Star, Store } from "lucide-react";
+import { ArrowRight, Crown, MapPin, Pizza, Star, Store } from "lucide-react";
 
 import { isPremiumMenuItem } from "@/lib/core/menu-items";
 import type { MenuItem } from "@/lib/types/menu";
@@ -54,8 +54,9 @@ export default function FeaturedCard({
           </div>
         )}
         {isPremiumMenuItem(item) && (
-          <span className="absolute left-3 top-3 rounded-full border border-emerald-400/30 bg-black/70 px-3 py-1 text-[11px] font-semibold text-emerald-300 backdrop-blur">
-            Featured
+          <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full border border-amber-400/40 bg-black/70 px-3 py-1 text-[11px] font-semibold text-amber-300 backdrop-blur">
+            <Crown aria-hidden="true" size={12} />
+            Premium
           </span>
         )}
       </div>

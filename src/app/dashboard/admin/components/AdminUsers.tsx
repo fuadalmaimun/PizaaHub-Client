@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { RefreshCw, Search, ShieldCheck, ShieldOff, UserRound } from "lucide-react";
+import { RefreshCw, Search, ShieldCheck, ShieldOff, Store, UserCog, UserRound } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 
 import {
   getAdminUsers,
   updateAdminUserBlockStatus,
+  updateAdminUserRole,
   type AdminUser,
 } from "@/lib/core/server";
 
@@ -114,6 +115,43 @@ export default function AdminUsers() {
       );
     } catch (cause) {
       toast.error(errorMessage(cause, "Could not update user access."));
+    } finally {
+      setBusyUserId(null);
+    }
+  }
+
+  async function changeUserRole(
+    userToUpdate: AdminUser,
+    nextRole: "admin" | "vendor",
+  ) {
+    const id = userId(userToUpdate);
+    if (!token || !id) {
+      toast.error("Could not identify this user.");
+      return;
+    }
+    if (userToUpdate.email === user?.email) {
+      toast.error("You cannot change your own admin role.");
+      return;
+    }
+    if (userToUpdate.role === nextRole) return;
+
+    setBusyUserId(id);
+    try {
+      await updateAdminUserRole(token, id, nextRole);
+      setUsers((currentUsers) =>
+        currentUsers.map((currentUser) =>
+          userId(currentUser) === id
+            ? { ...currentUser, role: nextRole }
+            : currentUser,
+        ),
+      );
+      toast.success(
+        nextRole === "admin"
+          ? `${userToUpdate.name} is now an admin.`
+          : `${userToUpdate.name} is now a vendor.`,
+      );
+    } catch (cause) {
+      toast.error(errorMessage(cause, "Could not change this user's role."));
     } finally {
       setBusyUserId(null);
     }
@@ -303,32 +341,78 @@ export default function AdminUsers() {
                     </div>
                   </div>
 
-                  <button
-                    type="button"
-                    disabled={!id || isSelf || busyUserId === id}
-                    onClick={() => void toggleUserBlock(listedUser)}
-                    title={
-                      isSelf
-                        ? "You cannot block your own admin account."
-                        : undefined
-                    }
-                    className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40 ${
-                      blocked
-                        ? "border-emerald-400/20 text-emerald-300 hover:bg-emerald-400/10"
-                        : "border-red-400/20 text-red-300 hover:bg-red-400/10"
-                    }`}
-                  >
-                    {blocked ? (
-                      <ShieldCheck aria-hidden="true" size={16} />
-                    ) : (
-                      <ShieldOff aria-hidden="true" size={16} />
-                    )}
-                    {busyUserId === id
-                      ? "Updating..."
-                      : blocked
-                        ? "Unblock"
-                        : "Block"}
-                  </button>
+                  <div className="flex flex-wrap items-center gap-2 sm:shrink-0 sm:justify-end">
+                    <button
+                      type="button"
+                      disabled={
+                        !id ||
+                        isSelf ||
+                        busyUserId === id ||
+                        listedUser.role === "admin"
+                      }
+                      onClick={() => void changeUserRole(listedUser, "admin")}
+                      title={
+                        isSelf
+                          ? "You cannot change your own admin role."
+                          : listedUser.role === "admin"
+                            ? "This user is already an admin."
+                            : undefined
+                      }
+                      className="inline-flex items-center justify-center gap-2 rounded-lg border border-amber-400/20 px-3 py-2 text-sm font-semibold text-amber-300 transition hover:bg-amber-400/10 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <UserCog aria-hidden="true" size={16} />
+                      Make admin
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={
+                        !id ||
+                        isSelf ||
+                        busyUserId === id ||
+                        listedUser.role === "vendor"
+                      }
+                      onClick={() => void changeUserRole(listedUser, "vendor")}
+                      title={
+                        isSelf
+                          ? "You cannot change your own admin role."
+                          : listedUser.role === "vendor"
+                            ? "This user is already a vendor."
+                            : undefined
+                      }
+                      className="inline-flex items-center justify-center gap-2 rounded-lg border border-sky-400/20 px-3 py-2 text-sm font-semibold text-sky-300 transition hover:bg-sky-400/10 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <Store aria-hidden="true" size={16} />
+                      Make vendor
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={!id || isSelf || busyUserId === id}
+                      onClick={() => void toggleUserBlock(listedUser)}
+                      title={
+                        isSelf
+                          ? "You cannot block your own admin account."
+                          : undefined
+                      }
+                      className={`inline-flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40 ${
+                        blocked
+                          ? "border-emerald-400/20 text-emerald-300 hover:bg-emerald-400/10"
+                          : "border-red-400/20 text-red-300 hover:bg-red-400/10"
+                      }`}
+                    >
+                      {blocked ? (
+                        <ShieldCheck aria-hidden="true" size={16} />
+                      ) : (
+                        <ShieldOff aria-hidden="true" size={16} />
+                      )}
+                      {busyUserId === id
+                        ? "Updating..."
+                        : blocked
+                          ? "Unblock"
+                          : "Block"}
+                    </button>
+                  </div>
                 </div>
 
                 <dl className="mt-4 grid gap-3 border-t border-white/10 pt-4 text-sm sm:grid-cols-3">

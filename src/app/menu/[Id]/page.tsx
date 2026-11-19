@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, MapPin, Pizza, Star, Store } from "lucide-react";
+import { ArrowLeft, Crown, MapPin, Pizza, Star, Store } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import FavoriteButton from "@/components/FavoriteButton";
 
@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { authClient } from "@/lib/auth-client";
 import { createCustomerOrder } from "@/lib/core/server";
-import { getMenuItems } from "@/lib/core/menu-items";
+import { getMenuItems, isPremiumMenuItem } from "@/lib/core/menu-items";
 import type { MenuItem } from "@/lib/types/menu";
 import ReviewSection from "../ReviewSection";
 
@@ -316,13 +316,21 @@ export default function MenuItemDetailsPage() {
                 />
                 {item.location ?? "Location not listed"}
               </p>
-              <p className="flex items-center gap-3 text-sm text-white/70">
+              <p className="flex flex-wrap items-center gap-3 text-sm text-white/70">
                 <Store
                   aria-hidden="true"
                   className="shrink-0 text-emerald-400"
                   size={17}
                 />
-                {vendorName(item)}
+                <span className="inline-flex flex-wrap items-center gap-2">
+                  {vendorName(item)}
+                  {isPremiumMenuItem(item) && (
+                    <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 text-[11px] font-semibold text-amber-300">
+                      <Crown aria-hidden="true" size={12} />
+                      Premium
+                    </span>
+                  )}
+                </span>
               </p>
             </div>
 
