@@ -6,6 +6,11 @@ import { useRouter } from "next/navigation";
 
 import { authClient } from "@/lib/auth-client";
 import { dashboardPath } from "@/lib/dashboard";
+import {
+  DashboardHeader,
+  DashboardPage,
+  DashboardStatus,
+} from "@/app/dashboard/components/DashboardKit";
 
 export function useCustomerDashboardAccess() {
   const router = useRouter();
@@ -43,23 +48,15 @@ export function CustomerDashboardFrame({
   children: ReactNode;
 }) {
   return (
-    <main className="min-h-[70svh] bg-[#08090b] px-5 pb-16 pt-10 text-white sm:px-8 sm:pb-20 lg:px-12">
-      <div className="mx-auto max-w-7xl">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold tracking-[0.16em] text-emerald-400">
-              CUSTOMER DASHBOARD
-            </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-              {title}
-            </h1>
-            <p className="mt-2 text-sm text-white/55">{description}</p>
-          </div>
-          {actions}
-        </div>
-        {children}
-      </div>
-    </main>
+    <DashboardPage>
+      <DashboardHeader
+        eyebrow="CUSTOMER DASHBOARD"
+        title={title}
+        description={description}
+        actions={actions}
+      />
+      {children}
+    </DashboardPage>
   );
 }
 
@@ -70,16 +67,7 @@ export function CustomerDashboardStatus({
   children: ReactNode;
   error?: boolean;
 }) {
-  return (
-    <main className="grid min-h-[60svh] place-items-center bg-[#08090b] px-5 text-white">
-      <p
-        role={error ? "alert" : "status"}
-        className={`text-center text-sm ${error ? "text-red-200" : "text-white/60"}`}
-      >
-        {children}
-      </p>
-    </main>
-  );
+  return <DashboardStatus error={error}>{children}</DashboardStatus>;
 }
 
 export function errorMessage(cause: unknown, fallback: string) {
