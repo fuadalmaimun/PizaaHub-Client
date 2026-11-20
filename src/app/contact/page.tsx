@@ -3,6 +3,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { FaFacebookF, FaInstagram, FaXTwitter } from "react-icons/fa6";
+
+const socialLinks = [
+  { name: "Facebook", href: "https://facebook.com", icon: FaFacebookF },
+  { name: "Instagram", href: "https://instagram.com", icon: FaInstagram },
+  { name: "X", href: "https://x.com", icon: FaXTwitter },
+];
 
 const contactInfo = [
   {
@@ -223,13 +230,17 @@ export default function ContactPage() {
               <p className="mb-5 font-bold">Follow Our Journey</p>
 
               <div className="flex flex-wrap gap-3">
-                {["Facebook", "Instagram", "Twitter"].map((social) => (
+                {socialLinks.map(({ name, href, icon: Icon }) => (
                   <a
-                    key={social}
-                    href="#"
-                    className="rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold transition hover:border-[#e50916] hover:bg-[#e50916] hover:text-white dark:hover:border-[#ffbd00] dark:hover:bg-[#ffbd00] dark:hover:text-[#e50916]"
+                    key={name}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={name}
+                    title={name}
+                    className="inline-flex size-12 items-center justify-center rounded-full border border-border bg-card text-lg transition hover:border-[#e50916] hover:bg-[#e50916] hover:text-white dark:hover:border-[#ffbd00] dark:hover:bg-[#ffbd00] dark:hover:text-[#e50916]"
                   >
-                    {social}
+                    <Icon aria-hidden="true" />
                   </a>
                 ))}
               </div>

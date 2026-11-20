@@ -18,6 +18,7 @@ import {
 
 import AuthLayout from "../AuthLayout";
 import { authClient } from "@/lib/auth-client";
+import { dashboardPath } from "@/lib/dashboard";
 import GoogleIcon from "@/components/GoogleIcon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -140,12 +141,11 @@ export default function SignUpPage() {
         imageUrl = uploadResult.url;
       }
 
-      const { error } = await authClient.signUp.email(
+      const { data, error } = await authClient.signUp.email(
         {
           name: fullName.trim(),
           email: email.trim(),
           password,
-          callbackURL: "/",
           ...(imageUrl ? { image: imageUrl } : {}),
         },
         { body: { role } },
@@ -157,7 +157,7 @@ export default function SignUpPage() {
       }
 
       toast.success("Account created successfully!");
-      router.push("/");
+      router.push(dashboardPath(data?.user?.role ?? role));
     } catch (error) {
       toast.error(
         error instanceof Error
